@@ -105,25 +105,24 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-
         <!-- 添加FastDFS客户端的引用 -->
-      <!--  <dependency>
-            <groupId>org.csource</groupId>
-            <artifactId>fastdfs-client-java</artifactId>
-            <version>1.29-SNAPSHOT</version>
-        </dependency>-->
+        <!--  <dependency>
+              <groupId>org.csource</groupId>
+              <artifactId>fastdfs-client-java</artifactId>
+              <version>1.29-SNAPSHOT</version>
+          </dependency>-->
         <dependency>
             <groupId>net.arccode</groupId>
             <artifactId>fastdfs-client-java</artifactId>
             <version>1.27.0</version>
         </dependency>
-
         <!-- 文件上传组件 -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

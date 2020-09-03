@@ -1,5 +1,6 @@
 package com.taotao.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.taotao.common.pojo.EasyUIDataGridResult;
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.pojo.TbItem;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ItemController {
 
-    @Autowired
+    @Reference
     private ItemService itemService;
 
     @ResponseBody

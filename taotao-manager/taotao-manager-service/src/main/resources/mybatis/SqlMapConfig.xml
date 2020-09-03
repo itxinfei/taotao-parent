@@ -8,6 +8,4 @@
         <plugin interceptor="com.github.pagehelper.PageHelper">
         </plugin>
     </plugins>
-
-
 </configuration>
