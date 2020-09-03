@@ -10,7 +10,7 @@
     <!--子模块-->
     <modules>
         <module>taoao-order</module>
-		<module>taotao-cart-web</module>
+        <module>taotao-cart-web</module>
         <module>taotao-common</module>
         <module>taotao-content</module>
         <module>taotao-item-web</module>
@@ -21,6 +21,7 @@
         <module>taotao-search</module>
         <module>taotao-sso</module>
         <module>taotao-sso-web</module>
+        <module>taotao-search-web</module>
     </modules>
 
     <properties>
