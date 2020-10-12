@@ -11,7 +11,7 @@
     <artifactId>taotao-search-web</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>taotao-search-web Maven Webapp</name>
+    <name>taotao-search-web</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>

@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <!--商城项目-->
     <groupId>com.taotao</groupId>
     <artifactId>taotao-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -24,10 +24,12 @@
         <module>taotao-search-web</module>
     </modules>
 
+    <!--版本控制-->
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit.version>4.12</junit.version>
         <spring.version>4.2.4.RELEASE</spring.version>
         <mybatis.version>3.2.8</mybatis.version>
@@ -59,6 +61,7 @@
         <jmail.version>1.5.6</jmail.version>
         <fastjson.version>1.2.44</fastjson.version>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <!-- 时间操作组件 -->

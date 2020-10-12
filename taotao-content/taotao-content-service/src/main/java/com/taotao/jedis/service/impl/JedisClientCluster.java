@@ -6,6 +6,9 @@ import com.taotao.jedis.service.JedisClient;
 
 import redis.clients.jedis.JedisCluster;
 
+/**
+ * 集群版
+ */
 public class JedisClientCluster implements JedisClient {
 
     @Autowired

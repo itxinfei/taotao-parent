@@ -10,15 +10,13 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
-
-    <!-- 配置单机版Solr
+    <!-- 配置单机版Solr-->
     <bean id="httpSolrServer" class="org.apache.solr.client.solrj.impl.HttpSolrServer">
-        <constructor-arg name="baseURL" value="http://192.168.206.10:8080/solr/collection1"/>
+        <constructor-arg name="baseURL" value="http://172.168.20.220:8088/solr/collection1"/>
     </bean>
--->
     <!-- 集群版Solr连接 -->
-    <bean id="cloudSolrServer" class="org.apache.solr.client.solrj.impl.CloudSolrServer">
+    <!--<bean id="cloudSolrServer" class="org.apache.solr.client.solrj.impl.CloudSolrServer">
         <constructor-arg name="zkHost" value="192.168.206.10:3181,192.168.206.10:3182,192.168.206.10:3183"/>
         <property name="defaultCollection" value="collection2"/>
-    </bean>
+    </bean>-->
 </beans>

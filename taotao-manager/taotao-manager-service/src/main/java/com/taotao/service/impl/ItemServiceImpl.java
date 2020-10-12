@@ -31,31 +31,43 @@ import com.taotao.pojo.TbItemDesc;
 import com.taotao.pojo.TbItemExample;
 import com.taotao.service.ItemService;
 
+/**
+ *
+ */
 @Service
 public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private TbItemMapper itemMapper;
+
     @Autowired
     private TbItemDescMapper itemDescMapper;
+
     @Autowired
     private JedisClient jedisClient;
+
     @Value("${ITEM_INFO}")
     private String ITEM_INFO;
+
     @Value("${ITEM_EXPIRE}")
     private Integer ITEM_EXPIRE;
 
     @Autowired
     private JmsTemplate jmsTemplate;
-    @Resource(name="itemAddTopic")
+
+    @Resource(name = "itemAddTopic")
     private Destination destination;
 
+    /**
+     * @param itemId
+     * @return
+     */
     @Override
     public TbItem getItemById(long itemId) {
         //查询数据库之前先查询缓存
         try {
-            String json = jedisClient.get(ITEM_INFO+":"+itemId+":BASE");
-            if(!StringUtils.isBlank(json)){
+            String json = jedisClient.get(ITEM_INFO + ":" + itemId + ":BASE");
+            if (!StringUtils.isBlank(json)) {
                 //把json转换成对象
                 return JSON.parseObject(json, TbItem.class);
             }
@@ -66,21 +78,25 @@ public class ItemServiceImpl implements ItemService {
         //把查询结果添加到缓存
         try {
             //把查询结果添加到缓存
-            jedisClient.set(ITEM_INFO+":"+itemId+":BASE", JSON.toJSONString(tbItem));
+            jedisClient.set(ITEM_INFO + ":" + itemId + ":BASE", JSON.toJSONString(tbItem));
             //设置过期时间，提高缓存的利用率
-            jedisClient.expire(ITEM_INFO+":"+itemId+":BASE", ITEM_EXPIRE);
+            jedisClient.expire(ITEM_INFO + ":" + itemId + ":BASE", ITEM_EXPIRE);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return tbItem;
     }
 
+    /**
+     * @param itemId
+     * @return
+     */
     @Override
     public TbItemDesc getItemDescById(long itemId) {
         //查询数据库之前先查询缓存
         try {
-            String json = jedisClient.get(ITEM_INFO+":"+itemId+":DESC");
-            if(!StringUtils.isBlank(json)){
+            String json = jedisClient.get(ITEM_INFO + ":" + itemId + ":DESC");
+            if (!StringUtils.isBlank(json)) {
                 //把json转换成对象
                 return JSON.parseObject(json, TbItemDesc.class);
             }
@@ -91,33 +107,46 @@ public class ItemServiceImpl implements ItemService {
         //把查询结果添加到缓存
         try {
             //把查询结果添加到缓存
-            jedisClient.set(ITEM_INFO+":"+itemId+":DESC", JSON.toJSONString(tbItemDesc));
+            jedisClient.set(ITEM_INFO + ":" + itemId + ":DESC", JSON.toJSONString(tbItemDesc));
             //设置过期时间，提高缓存的利用率
-            jedisClient.expire(ITEM_INFO+":"+itemId+":DESC", ITEM_EXPIRE);
+            jedisClient.expire(ITEM_INFO + ":" + itemId + ":DESC", ITEM_EXPIRE);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return tbItemDesc;
     }
 
+    /**
+     * @param page
+     * @param rows
+     * @return
+     */
     @Override
     public EasyUIDataGridResult getItemList(int page, int rows) {
+        System.out.println(page + rows + "分页");
         //设置分页信息
         PageHelper.startPage(page, rows);
         //执行查询
         TbItemExample example = new TbItemExample();
-        List<TbItem>  list = itemMapper.selectByExample(example);
+        List<TbItem> list = itemMapper.selectByExample(example);
         //获取查询结果
         PageInfo<TbItem> pageInfo = new PageInfo<>(list);
         EasyUIDataGridResult result = new EasyUIDataGridResult();
         result.setRows(list);
         result.setTotal(pageInfo.getTotal());
+        System.out.println(result.toString());
         //返回结果
         return result;
     }
 
+    /**
+     * @param tbItem
+     * @param desc
+     * @return
+     * @throws Exception
+     */
     @Override
-    public TaotaoResult createItem(TbItem tbItem, String desc) throws Exception{
+    public TaotaoResult createItem(TbItem tbItem, String desc) throws Exception {
         //生成商品ID
         final long itemId = IDUtils.genItemId();
         //补全item的属性
@@ -130,19 +159,24 @@ public class ItemServiceImpl implements ItemService {
         //添加商品描述
         insertItemDesc(itemId, desc);
         //发送activemq消息
-        jmsTemplate.send(destination,new MessageCreator() {
+        jmsTemplate.send(destination, new MessageCreator() {
 
             @Override
             public Message createMessage(Session session) throws JMSException {
-                TextMessage textMessage = session.createTextMessage(itemId+"");
+                TextMessage textMessage = session.createTextMessage(itemId + "");
                 return textMessage;
             }
         });
         return TaotaoResult.ok();
     }
 
-    //添加商品描述
-    private void insertItemDesc(long itemId,String desc){
+    /**
+     * 添加商品描述
+     *
+     * @param itemId
+     * @param desc
+     */
+    private void insertItemDesc(long itemId, String desc) {
         //创建一个商品描述表对应的pojo
         TbItemDesc itemDesc = new TbItemDesc();
         //补全pojo的属性

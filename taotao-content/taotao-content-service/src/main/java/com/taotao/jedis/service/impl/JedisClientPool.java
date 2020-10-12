@@ -7,6 +7,9 @@ import com.taotao.jedis.service.JedisClient;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+/**
+ * 单机
+ */
 public class JedisClientPool implements JedisClient {
 
     @Autowired

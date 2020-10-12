@@ -21,8 +21,12 @@ import com.taotao.pojo.TbContent;
 import com.taotao.pojo.TbContentExample;
 import com.taotao.pojo.TbContentExample.Criteria;
 
+/**
+ *
+ */
 @Service
 public class ContentServiceImpl implements ContentService {
+
     @Autowired
     private TbContentMapper contentMapper;
 
@@ -36,9 +40,9 @@ public class ContentServiceImpl implements ContentService {
     public List<TbContent> getContentListByCid(long cid) {
         //首先查询缓存，如果缓存中存在的话，就直接将结果返回给前台展示，查询缓存不能影响业务流程
         try {
-            String json = jedisClient.hget(INDEX_CONTENT, cid+"");
+            String json = jedisClient.hget(INDEX_CONTENT, cid + "");
             //如果从缓存中查到了结果
-            if(StringUtils.isNotBlank(json)){
+            if (StringUtils.isNotBlank(json)) {
                 //将json串转化为List<TbContent>
                 List<TbContent> list = JsonUtils.jsonToList(json, TbContent.class);
                 return list;
@@ -53,7 +57,7 @@ public class ContentServiceImpl implements ContentService {
         //添加缓存，不能影响业务流程
         try {
             String json = JsonUtils.objectToJson(list);
-            jedisClient.hset(INDEX_CONTENT, cid+"", json);
+            jedisClient.hset(INDEX_CONTENT, cid + "", json);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +108,7 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public TaotaoResult deleteContent(String ids) {
         String[] idList = ids.split(",");
-        for(String id : idList){
+        for (String id : idList) {
             //删除内容
             contentMapper.deleteByPrimaryKey(Long.valueOf(id));
         }
