@@ -51,5 +51,4 @@
         <property name="destination" ref="itemAddTopic"/>
         <property name="messageListener" ref="itemAddMessageListener"/>
     </bean>
-
 </beans>

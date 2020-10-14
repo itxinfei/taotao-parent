@@ -16,29 +16,41 @@ import com.taotao.order.pojo.OrderInfo;
 import com.taotao.pojo.TbOrderItem;
 import com.taotao.pojo.TbOrderShipping;
 
+/**
+ * 订单服务
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
+
     @Autowired
     private TbOrderMapper tbOrderMapper;
+
     @Autowired
     private TbOrderItemMapper tbOrderItemMapper;
+
     @Autowired
     private TbOrderShippingMapper tbOrderShippingMapper;
+
     @Autowired
     private JedisClient jedisClient;
 
     @Value("${ORDER_ID_GEN_KEY}")
     private String ORDER_ID_GEN_KEY;
+
     @Value("${ORDER_ID_BEGIN_VALUE}")
     private String ORDER_ID_BEGIN_VALUE;
+
     @Value("${ORDER_ITEM_ID_GEN_KEY}")
     private String ORDER_ITEM_ID_GEN_KEY;
 
-
+    /**
+     * @param orderInfo
+     * @return
+     */
     @Override
     public TaotaoResult createOrder(OrderInfo orderInfo) {
         //生成订单号，可以使用redis的incr方法生成
-        if(!jedisClient.exists(ORDER_ID_GEN_KEY)){
+        if (!jedisClient.exists(ORDER_ID_GEN_KEY)) {
             //设置初始值
             jedisClient.set(ORDER_ID_GEN_KEY, ORDER_ID_BEGIN_VALUE);
         }
