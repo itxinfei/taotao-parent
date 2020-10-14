@@ -1,3 +1,0 @@
-com\taotao\order\pojo\OrderInfo.class
-com\taotao\order\service\OrderService.class
-com\taotao\jedis\service\JedisClient.class
