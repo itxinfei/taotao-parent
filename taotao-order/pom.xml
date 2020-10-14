@@ -1,18 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>taoao-order</artifactId>
+        <artifactId>taotao-parent</artifactId>
         <groupId>com.taotao</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.taotao</groupId>
-    <artifactId>taotao-order-interface</artifactId>
+    <artifactId>taotao-order</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <modules>
+        <module>taotao-order-interface</module>
+        <module>taotao-order-service</module>
+    </modules>
 
-    <name>taotao-order-interface</name>
+    <name>taoao-order</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -22,8 +26,20 @@
     <dependencies>
         <dependency>
             <groupId>com.taotao</groupId>
-            <artifactId>taotao-manager-pojo</artifactId>
+            <artifactId>taotao-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <configuration>
+                    <path>/</path>
+                    <port>8090</port>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

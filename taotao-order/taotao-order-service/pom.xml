@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.taotao</groupId>
-        <artifactId>taoao-order</artifactId>
+        <artifactId>taotao-order</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 

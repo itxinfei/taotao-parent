@@ -9,7 +9,7 @@
 
     <!--子模块-->
     <modules>
-        <module>taoao-order</module>
+        <module>taotao-order</module>
         <module>taotao-cart-web</module>
         <module>taotao-common</module>
         <module>taotao-content</module>

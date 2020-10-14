@@ -30,7 +30,7 @@
 	</mvc:interceptors>
 	<!-- 引用dubbo服务 -->
 	<dubbo:application name="taotao-order-web"/>
-	<dubbo:registry protocol="zookeeper" address="192.168.206.10:2181"/>
+	<dubbo:registry protocol="zookeeper" address="zookeeper://172.168.20.221:2181"/>
 	<dubbo:reference interface="com.taotao.sso.service.UserService" id="userService" />
 	<dubbo:reference interface="com.taotao.order.service.OrderService" id="orderService" />
 </beans>      
