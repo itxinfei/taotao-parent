@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+/**
+ * 实现数据导入功能
+ */
 @Service
 public class SearchItemServiceImpl implements SearchItemService {
     @Autowired
@@ -21,9 +25,9 @@ public class SearchItemServiceImpl implements SearchItemService {
     public TaotaoResult importItemsToIndex() {
         //1、先查询所有商品数据
         try {
-            List<SearchItem> itemList= searchItemMapper.getSearchItemList();
+            List<SearchItem> itemList = searchItemMapper.getSearchItemList();
             //2、遍历商品数据添加到索引库
-            for(SearchItem searchItem : itemList){
+            for (SearchItem searchItem : itemList) {
                 //创建文档对象
                 SolrInputDocument document = new SolrInputDocument();
                 document.setField("id", searchItem.getId());
@@ -37,7 +41,7 @@ public class SearchItemServiceImpl implements SearchItemService {
             }
             solrServer.commit();
             return TaotaoResult.ok();
-        }  catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return TaotaoResult.build(500, "导入数据失败！");
         }

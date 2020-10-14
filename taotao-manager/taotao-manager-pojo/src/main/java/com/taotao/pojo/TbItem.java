@@ -2,7 +2,9 @@ package com.taotao.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ *
+ */
 public class TbItem implements Serializable{
     private Long id;
 

@@ -20,10 +20,16 @@ import com.taotao.pojo.TbContentCategoryExample.Criteria;
  */
 @Service
 public class ContentCategoryServiceImpl implements ContentCategoryService {
-    
+
     @Autowired
     private TbContentCategoryMapper contentCategoryMapper;
 
+    /**
+     * 展示内容分类
+     *
+     * @param parentId
+     * @return
+     */
     @Override
     public List<EasyUITreeNode> getContentCategoryList(long parentId) {
         //创建一个查询类
@@ -45,6 +51,13 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         return resultList;
     }
 
+    /**
+     * 添加内容分类
+     *
+     * @param parentId
+     * @param name
+     * @return
+     */
     @Override
     public TaotaoResult addContentCategory(long parentId, String name) {
         //实例化一个对象
@@ -73,6 +86,13 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         return TaotaoResult.ok(contentCategory);
     }
 
+    /**
+     * 更新内容分类
+     *
+     * @param id
+     * @param name
+     * @return
+     */
     @Override
     public TaotaoResult updateContentCategory(long id, String name) {
         //通过id查询节点对象
@@ -90,7 +110,12 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         return TaotaoResult.ok();
     }
 
-    //通过父节点id来查询所有子节点，这是抽离出来的公共方法
+    /**
+     * 通过父节点id来查询所有子节点，这是抽离出来的公共方法
+     *
+     * @param parentId
+     * @return
+     */
     private List<TbContentCategory> getContentCategoryListByParentId(long parentId) {
         TbContentCategoryExample example = new TbContentCategoryExample();
         Criteria criteria = example.createCriteria();
@@ -99,7 +124,11 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         return list;
     }
 
-    //递归删除节点
+    /**
+     * 递归删除节点
+     *
+     * @param parentId
+     */
     private void deleteNode(long parentId) {
         List<TbContentCategory> list = getContentCategoryListByParentId(parentId);
         for (TbContentCategory contentCategory : list) {
@@ -111,6 +140,12 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         }
     }
 
+    /**
+     * 删除内容分类
+     *
+     * @param id
+     * @return
+     */
     @Override
     public TaotaoResult deleteContentCategory(long id) {
         //删除分类，就是改节点的状态为2

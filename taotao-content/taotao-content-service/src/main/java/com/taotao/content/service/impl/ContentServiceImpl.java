@@ -22,7 +22,7 @@ import com.taotao.pojo.TbContentExample;
 import com.taotao.pojo.TbContentExample.Criteria;
 
 /**
- *
+ * 内容管理
  */
 @Service
 public class ContentServiceImpl implements ContentService {
@@ -36,6 +36,13 @@ public class ContentServiceImpl implements ContentService {
     @Value("${INDEX_CONTENT}")
     private String INDEX_CONTENT;
 
+    /**
+     * 根据ID查询内容
+     * 动态展示内容信息
+     *
+     * @param cid
+     * @return
+     */
     @Override
     public List<TbContent> getContentListByCid(long cid) {
         //首先查询缓存，如果缓存中存在的话，就直接将结果返回给前台展示，查询缓存不能影响业务流程
@@ -65,6 +72,14 @@ public class ContentServiceImpl implements ContentService {
         return list;
     }
 
+    /**
+     * 查询内容列表
+     *
+     * @param categoryId
+     * @param page
+     * @param rows
+     * @return
+     */
     @Override
     public EasyUIDataGridResult getContentList(long categoryId, int page, int rows) {
         //设置分页信息
@@ -83,6 +98,12 @@ public class ContentServiceImpl implements ContentService {
         return result;
     }
 
+    /**
+     * 添加内容
+     *
+     * @param content
+     * @return
+     */
     @Override
     public TaotaoResult addContent(TbContent content) {
         //补充属性
@@ -95,6 +116,12 @@ public class ContentServiceImpl implements ContentService {
         return TaotaoResult.ok();
     }
 
+    /**
+     * 更新内容
+     *
+     * @param content
+     * @return
+     */
     @Override
     public TaotaoResult updateContent(TbContent content) {
         // 填充属性
@@ -105,6 +132,12 @@ public class ContentServiceImpl implements ContentService {
         return TaotaoResult.ok();
     }
 
+    /**
+     * 删除内容
+     *
+     * @param ids
+     * @return
+     */
     @Override
     public TaotaoResult deleteContent(String ids) {
         String[] idList = ids.split(",");
@@ -116,6 +149,12 @@ public class ContentServiceImpl implements ContentService {
         return TaotaoResult.ok();
     }
 
+    /**
+     * 根据ID获取内容
+     *
+     * @param id
+     * @return
+     */
     @Override
     public TaotaoResult getContent(long id) {
         TbContent content = contentMapper.selectByPrimaryKey(id);

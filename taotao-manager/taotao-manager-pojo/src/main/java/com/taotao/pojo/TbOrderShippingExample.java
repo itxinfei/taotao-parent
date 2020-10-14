@@ -3,7 +3,9 @@ package com.taotao.pojo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ *
+ */
 public class TbOrderShippingExample {
     protected String orderByClause;
 

@@ -15,6 +15,9 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
+/**
+ * 商品详情页面静态化
+ */
 @Controller
 public class HtmlGenController {
     @Autowired
@@ -22,13 +25,13 @@ public class HtmlGenController {
 
     @RequestMapping("genhtml")
     @ResponseBody
-    public String genHtml() throws Exception{
+    public String genHtml() throws Exception {
         //生成静态页面
         Configuration configuration = freeMarkerConfigurer.getConfiguration();
         Template template = configuration.getTemplate("hello.ftl");
         Map data = new HashMap<>();
         data.put("hello", "spring freemarker test");
-        Writer out = new FileWriter(new File("E:/freemarker/out/test.html"));
+        Writer out = new FileWriter(new File("D:/freemarker/out/test.html"));
         template.process(data, out);
         out.close();
         //返回结果

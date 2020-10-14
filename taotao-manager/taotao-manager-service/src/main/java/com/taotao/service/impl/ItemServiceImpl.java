@@ -10,6 +10,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import com.taotao.pojo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,13 +27,10 @@ import com.taotao.common.utils.IDUtils;
 import com.taotao.jedis.service.JedisClient;
 import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
-import com.taotao.pojo.TbItem;
-import com.taotao.pojo.TbItemDesc;
-import com.taotao.pojo.TbItemExample;
 import com.taotao.service.ItemService;
 
 /**
- *
+ * 商品管理
  */
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -59,6 +57,8 @@ public class ItemServiceImpl implements ItemService {
     private Destination destination;
 
     /**
+     * 根据ID查询商品
+     *
      * @param itemId
      * @return
      */
@@ -88,6 +88,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     /**
+     * 根据ID查询商品
+     *
      * @param itemId
      * @return
      */
@@ -117,13 +119,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     /**
+     * 商品列表查询
+     *
      * @param page
      * @param rows
      * @return
      */
     @Override
     public EasyUIDataGridResult getItemList(int page, int rows) {
-        System.out.println(page + rows + "分页");
         //设置分页信息
         PageHelper.startPage(page, rows);
         //执行查询
@@ -140,6 +143,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     /**
+     * 添加商品
+     *
      * @param tbItem
      * @param desc
      * @return
@@ -187,5 +192,4 @@ public class ItemServiceImpl implements ItemService {
         //向商品描述表插入数据
         itemDescMapper.insert(itemDesc);
     }
-
 }

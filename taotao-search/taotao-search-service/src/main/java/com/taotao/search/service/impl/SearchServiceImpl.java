@@ -8,8 +8,12 @@ import com.taotao.common.pojo.SearchResult;
 import com.taotao.search.dao.SearchDao;
 import com.taotao.search.service.SearchService;
 
+/**
+ * 商品搜索
+ */
 @Service
 public class SearchServiceImpl implements SearchService {
+
     @Autowired
     private SearchDao searchDao;
 
@@ -22,7 +26,7 @@ public class SearchServiceImpl implements SearchService {
         query.setQuery(queryString);
         //设置分页条件
         if (page < 1) page = 1;
-        query.setStart((page-1)*rows);
+        query.setStart((page - 1) * rows);
         if (rows < 1) rows = 10;
         query.setRows(rows);
         //设置默认搜索域，由于复制域查询不太准确，因此建议直接使用item_title域
@@ -37,12 +41,11 @@ public class SearchServiceImpl implements SearchService {
         //计算查询结果的总页数
         long totalNumber = searchResult.getTotalPages();
         long pages = totalNumber / rows;
-        if(totalNumber % rows > 0){
+        if (totalNumber % rows > 0) {
             pages++;
         }
         searchResult.setTotalPages(pages);
         //返回结果
         return searchResult;
     }
-
 }

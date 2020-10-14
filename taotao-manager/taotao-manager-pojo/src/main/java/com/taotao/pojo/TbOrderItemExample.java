@@ -2,7 +2,9 @@ package com.taotao.pojo;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ *
+ */
 public class TbOrderItemExample {
     protected String orderByClause;
 

@@ -21,6 +21,6 @@
     <context:component-scan base-package="com.taotao.portal.controller"/>
     <!-- 引用dubbo服务 -->
     <dubbo:application name="taotao-portal-web"/>
-    <dubbo:registry protocol="zookeeper" address="172.168.20.134:2181"/>
+    <dubbo:registry protocol="zookeeper" address="zookeeper://172.168.20.221:2181"/>
     <dubbo:reference interface="com.taotao.content.service.ContentService" id="contentService"/>
 </beans>

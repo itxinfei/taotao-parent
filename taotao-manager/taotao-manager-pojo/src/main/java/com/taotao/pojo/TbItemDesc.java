@@ -3,7 +3,10 @@ package com.taotao.pojo;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TbItemDesc implements Serializable{
+/**
+ * 商品描述表
+ */
+public class TbItemDesc implements Serializable {
     private Long itemId;
 
     private Date created;

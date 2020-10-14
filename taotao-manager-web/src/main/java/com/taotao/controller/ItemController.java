@@ -1,20 +1,26 @@
 package com.taotao.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.taotao.common.pojo.EasyUIDataGridResult;
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.pojo.TbItem;
 import com.taotao.service.ItemService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
 
 /**
  * 商品管理
+ * 自己完成商品修改、商品删除、上架下架。
  */
 @Controller
+@RequestMapping("/item")
 public class ItemController {
 
-    @Reference
+    @Resource
     private ItemService itemService;
 
     /**
@@ -23,7 +29,7 @@ public class ItemController {
      * @param itemId
      * @return
      */
-    @RequestMapping("/item/{itemId}")
+    @RequestMapping("/{itemId}")
     @ResponseBody
     public TbItem getItemById(@PathVariable long itemId) {
         return this.itemService.getItemById(itemId);
@@ -36,18 +42,20 @@ public class ItemController {
      * @param rows
      * @return
      */
-    @RequestMapping("/item/list")
+    @RequestMapping("/list")
     @ResponseBody
     public EasyUIDataGridResult getItemList(int page, int rows) {
         return itemService.getItemList(page, rows);
     }
 
     /**
+     * 添加商品
+     *
      * @param item
      * @param desc
      * @return
      */
-    @RequestMapping(value = "item/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public TaotaoResult addItem(TbItem item, String desc) {
         try {
@@ -60,12 +68,15 @@ public class ItemController {
     }
 
     /**
+     * 规格参数
+     *
      * @param page
      * @param rows
      * @return
      */
-    @RequestMapping("/item/param/list")
+    @RequestMapping("/param/list")
+    @ResponseBody
     public EasyUIDataGridResult getItemParamList(int page, int rows) {
-        return null;
+        return itemService.getItemList(page, rows);
     }
 }

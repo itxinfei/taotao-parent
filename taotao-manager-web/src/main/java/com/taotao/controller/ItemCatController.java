@@ -1,6 +1,5 @@
 package com.taotao.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.taotao.common.pojo.EasyUITreeNode;
 import com.taotao.service.ItemCatService;
 import org.springframework.stereotype.Controller;
@@ -17,9 +16,19 @@ import java.util.List;
 @Controller
 public class ItemCatController {
 
-    @Reference
+    @Resource
     private ItemCatService itemCatService;
 
+    /**
+     * 初始化tree请求的url：/item/cat/list
+     * 参数：
+     * long id（父节点id）
+     * 返回值：json。数据格式
+     * List<EasyUITreeNode>
+     *
+     * @param parentId
+     * @return
+     */
     @RequestMapping("/item/cat/list")
     @ResponseBody
     public List<EasyUITreeNode> getItemCatList(@RequestParam(name = "id", defaultValue = "0") Long parentId) {

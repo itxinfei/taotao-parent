@@ -30,55 +30,64 @@ public class UserServiceImpl implements UserService {
     @Value("${SESSION_EXPIRE}")
     private Integer SESSION_EXPIRE;
 
+    /**
+     * @param data
+     * @param type
+     * @return
+     */
     @Override
     public TaotaoResult checkUserData(String data, int type) {
         //设置查询条件
         TbUserExample example = new TbUserExample();
         Criteria criteria = example.createCriteria();
         //1.判断用户名是否可用
-        if(type == 1){
+        if (type == 1) {
             criteria.andUsernameEqualTo(data);
-        } else if(type == 2){
+        } else if (type == 2) {
             //2.判断电话是否可用
             criteria.andPhoneEqualTo(data);
-        } else if(type == 3){
+        } else if (type == 3) {
             //3.判断邮箱是否可用
             criteria.andEmailEqualTo(data);
         } else {
             return TaotaoResult.build(400, "所传参数非法！");
         }
         List<TbUser> list = tbUserMapper.selectByExample(example);
-        if(list != null && list.size() > 0){
+        if (list != null && list.size() > 0) {
             return TaotaoResult.ok(false);
         }
 
         return TaotaoResult.ok(true);
     }
 
+    /**
+     * @param tbUser
+     * @return
+     */
     @Override
     public TaotaoResult register(TbUser tbUser) {
         //检查数据有效性
-        if(StringUtils.isBlank(tbUser.getUsername())){
+        if (StringUtils.isBlank(tbUser.getUsername())) {
             return TaotaoResult.build(400, "用户名不能为空！");
         }
         TaotaoResult taotaoResult = checkUserData(tbUser.getUsername(), 1);
-        if(!(Boolean)taotaoResult.getData()){
+        if (!(Boolean) taotaoResult.getData()) {
             return TaotaoResult.build(400, "用户名不能重复！");
         }
-        if(StringUtils.isBlank(tbUser.getPassword())){
+        if (StringUtils.isBlank(tbUser.getPassword())) {
             return TaotaoResult.build(400, "密码不能为空！");
         }
-        if(StringUtils.isNotBlank(tbUser.getPhone())){
+        if (StringUtils.isNotBlank(tbUser.getPhone())) {
             //如果电话不为空，那么接着判断是否重复，电话是不能重复的
             taotaoResult = checkUserData(tbUser.getPhone(), 2);
-            if(!(Boolean)taotaoResult.getData()){
+            if (!(Boolean) taotaoResult.getData()) {
                 return TaotaoResult.build(400, "电话不能重复！");
             }
         }
-        if(StringUtils.isNotBlank(tbUser.getEmail())){
+        if (StringUtils.isNotBlank(tbUser.getEmail())) {
             //如果邮箱不为空，那么接着判断是否重复，邮箱也是不能重复的
             taotaoResult = checkUserData(tbUser.getEmail(), 3);
-            if(!(Boolean)taotaoResult.getData()){
+            if (!(Boolean) taotaoResult.getData()) {
                 return TaotaoResult.build(400, "邮箱不能重复！");
             }
         }
@@ -93,6 +102,11 @@ public class UserServiceImpl implements UserService {
         return TaotaoResult.ok();
     }
 
+    /**
+     * @param username
+     * @param password
+     * @return
+     */
     @Override
     public TaotaoResult login(String username, String password) {
         //1.判断用户名和密码是否正确
@@ -100,13 +114,13 @@ public class UserServiceImpl implements UserService {
         Criteria criteria = example.createCriteria();
         criteria.andUsernameEqualTo(username);
         List<TbUser> list = tbUserMapper.selectByExample(example);
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             //返回登录失败
             return TaotaoResult.build(400, "用户名或密码不正确！");
         }
         TbUser user = list.get(0);
         //密码要进行md5加密后再校验
-        if(!DigestUtils.md5DigestAsHex(password.getBytes()).equals(user.getPassword())){
+        if (!DigestUtils.md5DigestAsHex(password.getBytes()).equals(user.getPassword())) {
             //返回登录失败
             return TaotaoResult.build(400, "用户名或密码不正确！");
         }
@@ -115,17 +129,21 @@ public class UserServiceImpl implements UserService {
         //3.把用户信息保存到redis当中，key就是token，value就是用户信息
         //我们在redis中存放用户信息不要存密码，因为这样太危险了，因此我们先把密码置空
         user.setPassword(null);
-        jedisClient.set(USER_SESSION+":"+token, JSON.toJSONString(user));
+        jedisClient.set(USER_SESSION + ":" + token, JSON.toJSONString(user));
         //4.设置过期时间
-        jedisClient.expire(USER_SESSION+":"+token, SESSION_EXPIRE);
+        jedisClient.expire(USER_SESSION + ":" + token, SESSION_EXPIRE);
         //5.返回登录成功，要记得带回token信息
         return TaotaoResult.ok(token);
     }
 
+    /**
+     * @param token
+     * @return
+     */
     @Override
     public TaotaoResult getUserByToken(String token) {
         String json = jedisClient.get(USER_SESSION + ":" + token);
-        if(StringUtils.isBlank(json)){
+        if (StringUtils.isBlank(json)) {
             return TaotaoResult.build(400, "token已过期！");
         }
         //如果我们直接把json返回的话，由于字符串中的"在redis中是有特殊意义的，因此
@@ -134,14 +152,18 @@ public class UserServiceImpl implements UserService {
         TbUser user = JSON.parseObject(json, TbUser.class);
         //我们每访问一次该token，如果该token还没过期，我们便需要更新token的值，再把token恢复
         //到原来的最大值
-        jedisClient.expire(USER_SESSION+":"+token, SESSION_EXPIRE);
+        jedisClient.expire(USER_SESSION + ":" + token, SESSION_EXPIRE);
         //返回结果
         return TaotaoResult.ok(user);
     }
 
+    /**
+     * @param token
+     * @return
+     */
     @Override
     public TaotaoResult logout(String token) {
-        jedisClient.expire(USER_SESSION+":"+token, 0);
+        jedisClient.expire(USER_SESSION + ":" + token, 0);
         return TaotaoResult.ok();
     }
 }

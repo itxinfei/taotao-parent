@@ -1,6 +1,5 @@
 package com.taotao.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.taotao.common.pojo.EasyUITreeNode;
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.content.service.ContentCategoryService;
@@ -17,10 +16,12 @@ import java.util.List;
 @RestController
 public class ContentCategoryController {
 
-    @Reference
+    @Resource
     private ContentCategoryService contentCategoryService;
 
     /**
+     * 内容分类列表
+     *
      * @param parentId
      * @return
      */
@@ -32,6 +33,8 @@ public class ContentCategoryController {
     }
 
     /**
+     * 创建内容分类
+     *
      * @param parentId
      * @param name
      * @return
@@ -43,6 +46,8 @@ public class ContentCategoryController {
     }
 
     /**
+     * 更新内容分类
+     *
      * @param id
      * @param name
      * @return
@@ -54,6 +59,8 @@ public class ContentCategoryController {
     }
 
     /**
+     * 删除内容分类
+     *
      * @param id
      * @return
      */

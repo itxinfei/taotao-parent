@@ -12,6 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.taotao.search.utils.SendMail;
 
+/**
+ * 全局异常处理器
+ */
 public class GlobalExceptioResolver implements HandlerExceptionResolver {
     //获取logger
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptioResolver.class);
@@ -20,7 +23,7 @@ public class GlobalExceptioResolver implements HandlerExceptionResolver {
     public ModelAndView resolveException(HttpServletRequest rquest, HttpServletResponse response,
                                          Object handler, final Exception e) {
         logger.info("进入全局异常处理器。。。");
-        logger.debug("测试handler的类型："+handler.getClass());
+        logger.debug("测试handler的类型：" + handler.getClass());
         //控制台打印异常
         e.printStackTrace();
         //向日志文件中写入异常
