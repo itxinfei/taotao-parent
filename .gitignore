@@ -41,3 +41,6 @@ taotao-sso-web/target/taotao-sso-web/META-INF/
 taotao-sso/taotao-sso-interface/target/generated-sources/
 taotao-sso/taotao-sso-service/target/generated-sources/
 taotao-sso/taotao-sso-service/target/taotao-sso-service/META-INF/
+taotao-order/taotao-order-interface/target/
+taotao-order/taotao-order-service/target/
+taotao-search-web/target/taotao-search-web/
