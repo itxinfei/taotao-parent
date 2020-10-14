@@ -16,7 +16,7 @@
         <module>taotao-order-service</module>
     </modules>
 
-    <name>taoao-order</name>
+    <name>taotao-order</name>
     <url>http://maven.apache.org</url>
 
     <properties>
