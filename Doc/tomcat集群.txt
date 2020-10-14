@@ -1,0 +1,37 @@
+tomcat-name http-port  shutdown-port  coyote-port
+
+tomcat-1    9091         9001            9011
+tomcat-2    9092         9002            9012
+tomcat-3    9093         9003            9013
+tomcat-4    9094         9004            9014
+
+
+clientPort=3181
+
+server.1=192.168.206.10:2891:4881  
+
+server.2=192.168.206.10:2892:4882  
+
+server.3=192.168.206.10:2893:5883
+
+./zkcli.sh -zkhost 192.168.206.10:3181,192.168.206.10:3182,192.168.206.10:3183 -cmd upconfig -confdir /usr/local/solrcloud/solrhome1/collection1/conf -confname myconf
+
+http://192.168.206.10:9091/solr/admin/collections?action=CREATE&name=collection2&numShards=2&replicationFactor=2
+http://192.168.206.10:9091/solr/admin/collections?action=DELETE&name=collection1
+
+<fieldType name="text_ik" class="solr.TextField">
+	<analyzer class="org.wltea.analyzer.lucene.IKAnalyzer"/>
+</fieldType>
+
+<field name="item_title" type="text_ik" indexed="true" stored="true"/>
+<field name="item_sell_point" type="text_ik" indexed="true" stored="true"/>
+<field name="item_price"  type="long" indexed="true" stored="true"/>
+<field name="item_image" type="string" indexed="false" stored="true" />
+<field name="item_category_name" type="string" indexed="true" stored="true" />
+<field name="item_desc" type="text_ik" indexed="true" stored="false" />
+
+<field name="item_keywords" type="text_ik" indexed="true" stored="false" multiValued="true"/>
+<copyField source="item_title" dest="item_keywords"/>
+<copyField source="item_sell_point" dest="item_keywords"/>
+<copyField source="item_category_name" dest="item_keywords"/>
+<copyField source="item_desc" dest="item_keywords"/>

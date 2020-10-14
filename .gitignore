@@ -1,0 +1,43 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+*/logs
+taotao-cart-web/target/generated-sources/
+taotao-cart-web/target/taotao-cart-web/META-INF/
+taotao-common/target/generated-sources/
+taotao-content/taotao-content-interface/target/generated-sources/
+taotao-content/taotao-content-service/target/generated-sources/
+taotao-content/taotao-content-service/target/taotao-content-service/META-INF/
+taotao-item-web/target/generated-sources/
+taotao-item-web/target/taotao-item-web/META-INF/
+taotao-manager-web/target/generated-sources/
+taotao-manager-web/target/taotao-manager-web/META-INF/
+taotao-manager/taotao-manager-dao/target/generated-sources/
+taotao-manager/taotao-manager-interface/target/generated-sources/
+taotao-manager/taotao-manager-pojo/target/generated-sources/
+taotao-manager/taotao-manager-service/target/generated-sources/
+taotao-manager/taotao-manager-service/target/taotao-manager-service/META-INF/
+taotao-order-web/target/generated-sources/
+taotao-order-web/target/taotao-order-web/META-INF/
+taotao-order/taotao-order-interface/target/generated-sources/
+taotao-order/taotao-order-service/target/generated-sources/
+taotao-order/taotao-order-service/target/taotao-order-service/META-INF/
+taotao-portal-web/target/generated-sources/
+taotao-portal-web/target/taotao-portal-web/META-INF/
+taotao-search-web/target/generated-sources/
+taotao-search-web/target/taotao-search-web/META-INF/
+taotao-search/taotao-search-interface/target/generated-sources/
+taotao-search/taotao-search-service/target/generated-sources/
+taotao-search/taotao-search-service/target/taotao-search-service/META-INF/
+taotao-sso-web/target/generated-sources/
+taotao-sso-web/target/taotao-sso-web/META-INF/
+taotao-sso/taotao-sso-interface/target/generated-sources/
+taotao-sso/taotao-sso-service/target/generated-sources/
+taotao-sso/taotao-sso-service/target/taotao-sso-service/META-INF/
