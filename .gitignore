@@ -44,3 +44,17 @@ taotao-sso/taotao-sso-service/target/taotao-sso-service/META-INF/
 taotao-order/taotao-order-interface/target/
 taotao-order/taotao-order-service/target/
 taotao-search-web/target/taotao-search-web/
+taotao-content/taotao-content-service/target/apache-tomcat-maven-plugin/
+taotao-content/taotao-content-service/target/tomcat/webapps/
+taotao-content/taotao-content-service/target/tomcat/work/
+taotao-manager-web/target/apache-tomcat-maven-plugin/
+taotao-manager-web/target/tomcat/webapps/
+taotao-manager/taotao-manager-service/target/apache-tomcat-maven-plugin/
+taotao-manager/taotao-manager-service/target/tomcat/webapps/
+taotao-manager/taotao-manager-service/target/tomcat/work/
+taotao-search/taotao-search-service/target/apache-tomcat-maven-plugin/
+taotao-search/taotao-search-service/target/tomcat/webapps/
+taotao-search/taotao-search-service/target/tomcat/work/
+taotao-sso/taotao-sso-service/target/apache-tomcat-maven-plugin/
+taotao-sso/taotao-sso-service/target/tomcat/webapps/
+taotao-sso/taotao-sso-service/target/tomcat/work/
