@@ -19,18 +19,27 @@ import com.taotao.pojo.TbUserExample;
 import com.taotao.pojo.TbUserExample.Criteria;
 import com.taotao.sso.service.UserService;
 
+/**
+ * 用户登录
+ */
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private TbUserMapper tbUserMapper;
+
     @Autowired
     private JedisClient jedisClient;
+
     @Value("${USER_SESSION}")
     private String USER_SESSION;
+
     @Value("${SESSION_EXPIRE}")
     private Integer SESSION_EXPIRE;
 
     /**
+     * 数据校验
+     *
      * @param data
      * @param type
      * @return
@@ -56,11 +65,12 @@ public class UserServiceImpl implements UserService {
         if (list != null && list.size() > 0) {
             return TaotaoResult.ok(false);
         }
-
         return TaotaoResult.ok(true);
     }
 
     /**
+     * 用户注册
+     *
      * @param tbUser
      * @return
      */
@@ -103,6 +113,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 用户登录
+     *
      * @param username
      * @param password
      * @return
@@ -137,6 +149,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 通过token获取用户信息
+     *
      * @param token
      * @return
      */
@@ -158,6 +172,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 用户登出
+     *
      * @param token
      * @return
      */

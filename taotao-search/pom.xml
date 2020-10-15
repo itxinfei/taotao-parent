@@ -38,7 +38,6 @@
                 <configuration>
                     <path>/</path>
                     <port>8084</port>
-                    
                     <!--<skip>true</skip>-->
                 </configuration>
             </plugin>

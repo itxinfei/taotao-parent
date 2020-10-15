@@ -1,37 +1,42 @@
 package com.taotao.order.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSON;
 import com.taotao.common.pojo.TaotaoResult;
+import com.taotao.common.utils.CookieUtils;
 import com.taotao.order.pojo.OrderInfo;
 import com.taotao.order.service.OrderService;
+import com.taotao.pojo.TbItem;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.alibaba.fastjson.JSON;
-import com.taotao.common.utils.CookieUtils;
-import com.taotao.pojo.TbItem;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ */
 @Controller
 public class OrderController {
+
     @Value("${CART_KEY}")
     private String CART_KEY;
 
-    @Autowired
+    @Resource
     private OrderService orderSerive;
 
-
+    /**
+     * @param request
+     * @return
+     */
     @RequestMapping("/order/order-cart")
-    public String showOrderCart(HttpServletRequest request){
+    public String showOrderCart(HttpServletRequest request) {
         //用户必须是登录状态
         //取用户ID
         //根据用户ID取收获地址列表，这里就使用静态数据了
@@ -43,10 +48,14 @@ public class OrderController {
         return "order-cart";
     }
 
-    private List<TbItem> getCartItemList(HttpServletRequest request){
+    /**
+     * @param request
+     * @return
+     */
+    private List<TbItem> getCartItemList(HttpServletRequest request) {
         //从cookie中取购物车商品列表
         String json = CookieUtils.getCookieValue(request, CART_KEY, true);//为了防止乱码，统一下编码格式
-        if(StringUtils.isBlank(json)){
+        if (StringUtils.isBlank(json)) {
             //说明cookie中没有商品列表，那么就返回一个空的列表
             return new ArrayList<TbItem>();
         }
@@ -54,8 +63,13 @@ public class OrderController {
         return list;
     }
 
-    @RequestMapping(value="/order/create",method= RequestMethod.POST)
-    public String createOrder(OrderInfo orderInfo, Model model){
+    /**
+     * @param orderInfo
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/order/create", method = RequestMethod.POST)
+    public String createOrder(OrderInfo orderInfo, Model model) {
         //生成订单
         TaotaoResult result = orderSerive.createOrder(orderInfo);
         //返回逻辑视图

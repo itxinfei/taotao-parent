@@ -10,6 +10,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import com.taotao.mapper.TbItemParamItemMapper;
 import com.taotao.pojo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private TbItemDescMapper itemDescMapper;
+
+    @Autowired
+    private TbItemParamItemMapper itemParamItemMapper;
 
     @Autowired
     private JedisClient jedisClient;
@@ -88,7 +92,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     /**
-     * 根据ID查询商品
+     * 根据ID查询商品描述
      *
      * @param itemId
      * @return
@@ -116,6 +120,26 @@ public class ItemServiceImpl implements ItemService {
             e.printStackTrace();
         }
         return tbItemDesc;
+    }
+
+    /**
+     * 根据商品id取规格参数
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public TbItemParamItem getItemParamById(Long id) {
+        TbItemParamItemExample example = new TbItemParamItemExample();
+        TbItemParamItemExample.Criteria criteria = example.createCriteria();
+        criteria.andItemIdEqualTo(id);
+        List<TbItemParamItem> list = itemParamItemMapper.selectByExampleWithBLOBs(example);
+        TbItemParamItem itemParamItem = null;
+        if (null != null && !list.isEmpty()) {
+            itemParamItem = list.get(0);
+        }
+        return itemParamItem;
     }
 
     /**

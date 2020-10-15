@@ -17,8 +17,11 @@ import com.taotao.common.pojo.SearchItem;
 import com.taotao.common.pojo.SearchResult;
 import com.taotao.search.dao.SearchDao;
 
+/**
+ * 商品搜索
+ */
 @Repository
-public class SearchDaoImpl implements SearchDao{
+public class SearchDaoImpl implements SearchDao {
     @Autowired
     private SolrServer solrServer;
 
@@ -37,24 +40,24 @@ public class SearchDaoImpl implements SearchDao{
         //把查询结果封装到SearchItem当中
         for (SolrDocument solrDocument : solrDocumentList) {
             SearchItem searchItem = new SearchItem();
-            searchItem.setId((String)solrDocument.get("id"));
-            String image = (String)solrDocument.get("item_image");
-            if(!StringUtils.isBlank(image)){
+            searchItem.setId((String) solrDocument.get("id"));
+            String image = (String) solrDocument.get("item_image");
+            if (!StringUtils.isBlank(image)) {
                 image = image.split(",")[0];
             }
             searchItem.setImage(image);
-            searchItem.setCategory_name((String)solrDocument.get("item_category_name"));
-            searchItem.setItem_desc((String)solrDocument.get("item_desc"));
-            searchItem.setPrice((long)solrDocument.get("item_price"));
-            searchItem.setSell_point((String)solrDocument.get("item_sell_point"));
+            searchItem.setCategory_name((String) solrDocument.get("item_category_name"));
+            searchItem.setItem_desc((String) solrDocument.get("item_desc"));
+            searchItem.setPrice((long) solrDocument.get("item_price"));
+            searchItem.setSell_point((String) solrDocument.get("item_sell_point"));
             //取高亮显示
-            Map<String,Map<String,List<String>>> highlighting = response.getHighlighting();
+            Map<String, Map<String, List<String>>> highlighting = response.getHighlighting();
             List<String> list = highlighting.get(solrDocument.get("id")).get("item_title");
             String title = "";
-            if(list != null && list.size() > 0){
+            if (list != null && list.size() > 0) {
                 title = list.get(0);
             } else {
-                title = (String)solrDocument.get("item_title");
+                title = (String) solrDocument.get("item_title");
             }
             searchItem.setTitle(title);
             itemList.add(searchItem);

@@ -7,10 +7,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
- *
+ * 发送邮件
  */
 public class SendMail {
-
+    //发送一个邮件
     public static void sendEmail(String subject, String text) throws MessagingException {
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");//设置访问smtp服务器需要认证

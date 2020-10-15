@@ -4,6 +4,9 @@ import com.taotao.jedis.service.JedisClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.JedisCluster;
 
+/**
+ * 集群Redis
+ */
 public class JedisClientCluster implements JedisClient {
 
     @Autowired

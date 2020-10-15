@@ -1,28 +1,29 @@
 package com.taotao.item.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.taotao.item.pojo.Item;
+import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbItemDesc;
+import com.taotao.service.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.taotao.item.pojo.Item;
-import com.taotao.pojo.TbItem;
-import com.taotao.pojo.TbItemDesc;
-import com.taotao.service.ItemService;
+import javax.annotation.Resource;
 
 /**
  * 商品详情页面展示Controller
- * @author wanghaijie
  *
+ * @author wanghaijie
  */
 @Controller
 public class ItemController {
-    @Autowired
+
+    @Resource
     private ItemService itemService;
 
     @RequestMapping("/item/{itemId}")
-    public String showItem(@PathVariable Long itemId,Model model){
+    public String showItem(@PathVariable Long itemId, Model model) {
         //获取商品基本信息
         TbItem tbItem = itemService.getItemById(itemId);
         Item item = new Item(tbItem);
