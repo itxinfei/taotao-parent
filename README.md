@@ -1,7 +1,12 @@
 ### 淘淘商城
+
+### 交流方式：
+
+QQ技术交流群：863662849<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=9yLlyD1dRBL97xmBKw43zRt0-6xg8ohb&jump_from=webapi">
+<img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="Java项目交流+求职面试" title="Java项目交流+求职面试"></a><a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=f0hLSE9OTkdHTT8ODlEcEBI" style="text-decoration:none;"><img src="http://rescdn.qqmail.com/zh_CN/htmledition/images/function/qm_open/ico_mailme_02.png"/></a>
+
 这个淘淘商城是根据原始资料进行的整理，虽然以现在的时间点来看这套教程比较老了，但是如果认真去学习的话还是能学到很多东西，而且配套资料真的是太全了，笔记写得也很详细。
-- 学好Java，不用多久你会升职加薪、当上总经理、出任CEO、迎娶白富美、走上人生巅峰！想想还有点小激动。
-- 祝大家技术更好，开心工作，快乐玩耍。
+
 
 #### 开发环境及包结构
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1015/175901_686bb863_800553.png "屏幕截图.png")
@@ -82,19 +87,3 @@
 - http://localhost:8091/ taotao-order-web
 
 我的服务都是Docker运行的，不熟悉Docker自己去学习一下吧，感觉还是很简单，精通就有点难。
-
-
-### 交流方式：
-
-QQ技术交流群：863662849<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=9yLlyD1dRBL97xmBKw43zRt0-6xg8ohb&jump_from=webapi">
-<img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="Java项目交流+求职面试" title="Java项目交流+求职面试"></a><a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=f0hLSE9OTkdHTT8ODlEcEBI" style="text-decoration:none;"><img src="http://rescdn.qqmail.com/zh_CN/htmledition/images/function/qm_open/ico_mailme_02.png"/></a>
-
-![QQ技术交流群：863662849](https://images.gitee.com/uploads/images/2020/1022/145319_459f7be2_800553.png "QQ技术交流群.png")
-
-### 整理不易，欢迎各位白嫖star
-如果可以请各位大佬打赏一下，请我喝杯咖啡，资助一下云服务器，部署一个演示站点，感谢！！！
-
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1022/152637_f80669f5_800553.jpeg "支付宝收钱码.jpg")
-
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1022/152705_964cb145_800553.png "微信收钱码.png")
-
