@@ -5,6 +5,8 @@ import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.pojo.TbItem;
 import com.taotao.pojo.TbItemParamItem;
 import com.taotao.service.ItemService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,8 @@ import javax.annotation.Resource;
  */
 @Controller
 public class ItemController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
     @Resource
     private ItemService itemService;
@@ -62,7 +66,7 @@ public class ItemController {
             TaotaoResult result = itemService.createItem(item, desc);
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("添加商品失败", e);
             return TaotaoResult.build(500, "添加商品失败");
         }
     }

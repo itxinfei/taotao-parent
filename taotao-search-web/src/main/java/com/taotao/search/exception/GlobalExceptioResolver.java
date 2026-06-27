@@ -24,8 +24,6 @@ public class GlobalExceptioResolver implements HandlerExceptionResolver {
                                          Object handler, final Exception e) {
         logger.info("进入全局异常处理器。。。");
         logger.debug("测试handler的类型：" + handler.getClass());
-        //控制台打印异常
-        e.printStackTrace();
         //向日志文件中写入异常
         logger.error("系统发生异常", e);
         //发邮件（采用jmail客户端进行发送）
@@ -36,7 +34,7 @@ public class GlobalExceptioResolver implements HandlerExceptionResolver {
                 try {
                     SendMail.sendEmail("搜索系统出现异常", StackTrace.getStackTrace(e));
                 } catch (MessagingException e1) {
-                    e1.printStackTrace();
+                    logger.error("发送异常通知邮件失败", e1);
                 }
             }
         };

@@ -6,11 +6,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 淘淘商城自定义响应结构
  */
 public class JsonUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(JsonUtils.class);
 
     // 定义jackson对象
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -28,7 +32,7 @@ public class JsonUtils {
             String string = MAPPER.writeValueAsString(data);
             return string;
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("JSON序列化失败", e);
         }
         return null;
     }
@@ -45,7 +49,7 @@ public class JsonUtils {
             T t = MAPPER.readValue(jsonData, beanType);
             return t;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("JSON转POJO失败", e);
         }
         return null;
     }
@@ -65,7 +69,7 @@ public class JsonUtils {
             List<T> list = MAPPER.readValue(jsonData, javaType);
             return list;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("JSON转List失败", e);
         }
 
         return null;

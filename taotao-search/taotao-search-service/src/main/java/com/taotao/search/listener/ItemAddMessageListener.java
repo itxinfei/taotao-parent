@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.taotao.common.pojo.SearchItem;
 import com.taotao.search.mapper.SearchItemMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class ItemAddMessageListener implements MessageListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(ItemAddMessageListener.class);
     @Autowired
     private SearchItemMapper searchItemMapper;
     @Autowired
@@ -41,7 +45,7 @@ public class ItemAddMessageListener implements MessageListener {
                         break;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("等待事务提交时休眠被中断", e);
                 }
             }
             //创建文档对象
@@ -59,7 +63,7 @@ public class ItemAddMessageListener implements MessageListener {
             //提交
             solrServer.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("添加商品索引到Solr失败", e);
         }
     }
 

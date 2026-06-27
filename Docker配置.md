@@ -4,7 +4,7 @@
 ### 1、安装redis
 `docker pull redis:latest`
 
-`docker run -itd --name mongo -p 27017:27017 mongo`
+`docker run -itd --name redis -p 6379:6379 redis`
 
 ### 2、安装mongodb
 `docker pull mongo:latest`

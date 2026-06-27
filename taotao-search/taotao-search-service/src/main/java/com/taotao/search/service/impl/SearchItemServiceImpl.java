@@ -10,12 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 实现数据导入功能
  */
 @Service
 public class SearchItemServiceImpl implements SearchItemService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SearchItemServiceImpl.class);
     @Autowired
     private SearchItemMapper searchItemMapper;
     @Autowired
@@ -42,7 +46,7 @@ public class SearchItemServiceImpl implements SearchItemService {
             solrServer.commit();
             return TaotaoResult.ok();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("导入商品数据到索引库失败", e);
             return TaotaoResult.build(500, "导入数据失败！");
         }
     }

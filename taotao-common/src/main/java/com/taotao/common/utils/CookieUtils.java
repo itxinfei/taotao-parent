@@ -8,11 +8,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Cookie 工具类
  */
 public final class CookieUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(CookieUtils.class);
 
     /**
      * 得到Cookie的值, 不编码
@@ -50,7 +54,7 @@ public final class CookieUtils {
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error("Cookie解码失败", e);
         }
         return retValue;
     }
@@ -76,7 +80,7 @@ public final class CookieUtils {
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error("Cookie解码失败", e);
         }
         return retValue;
     }
@@ -155,7 +159,7 @@ public final class CookieUtils {
             cookie.setPath("/");
             response.addCookie(cookie);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("设置Cookie失败", e);
         }
     }
 
@@ -185,7 +189,7 @@ public final class CookieUtils {
             cookie.setPath("/");
             response.addCookie(cookie);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("设置Cookie(编码)失败", e);
         }
     }
 

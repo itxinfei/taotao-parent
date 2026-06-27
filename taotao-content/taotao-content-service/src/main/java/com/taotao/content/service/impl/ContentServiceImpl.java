@@ -3,10 +3,11 @@ package com.taotao.content.service.impl;
 import java.util.Date;
 import java.util.List;
 
-import com.alibaba.dubbo.common.json.JSON;
 import com.taotao.common.utils.JsonUtils;
 import com.taotao.jedis.service.JedisClient;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ import com.taotao.pojo.TbContentExample.Criteria;
  */
 @Service
 public class ContentServiceImpl implements ContentService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContentServiceImpl.class);
 
     @Autowired
     private TbContentMapper contentMapper;
@@ -55,7 +58,7 @@ public class ContentServiceImpl implements ContentService {
                 return list;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("查询Redis缓存(内容)失败", e);
         }
         TbContentExample example = new TbContentExample();
         Criteria criteria = example.createCriteria();
@@ -66,7 +69,7 @@ public class ContentServiceImpl implements ContentService {
             String json = JsonUtils.objectToJson(list);
             jedisClient.hset(INDEX_CONTENT, cid + "", json);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("写入Redis缓存(内容)失败", e);
         }
         //返回结果
         return list;

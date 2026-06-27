@@ -5,11 +5,15 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 发送邮件
  */
 public class SendMail {
+
+    private static final Logger logger = LoggerFactory.getLogger(SendMail.class);
     //发送一个邮件
     public static void sendEmail(String subject, String text) throws MessagingException {
         Properties properties = new Properties();
@@ -65,7 +69,7 @@ public class SendMail {
         try {
             groupSendEmail("出现了异常，请及时处理！", "内容管理系统出现重大错误，请及时进行处理");
         } catch (MessagingException e) {
-            e.printStackTrace();
+            logger.error("发送群发邮件失败", e);
         }
     }
 }

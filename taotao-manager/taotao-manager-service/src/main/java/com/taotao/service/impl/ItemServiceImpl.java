@@ -29,12 +29,16 @@ import com.taotao.jedis.service.JedisClient;
 import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
 import com.taotao.service.ItemService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 商品管理
  */
 @Service
 public class ItemServiceImpl implements ItemService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
 
     @Autowired
     private TbItemMapper itemMapper;
@@ -76,7 +80,7 @@ public class ItemServiceImpl implements ItemService {
                 return JSON.parseObject(json, TbItem.class);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("查询Redis缓存(商品基础信息)失败", e);
         }
         TbItem tbItem = itemMapper.selectByPrimaryKey(itemId);
         //把查询结果添加到缓存
@@ -86,7 +90,7 @@ public class ItemServiceImpl implements ItemService {
             //设置过期时间，提高缓存的利用率
             jedisClient.expire(ITEM_INFO + ":" + itemId + ":BASE", ITEM_EXPIRE);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("写入Redis缓存(商品基础信息)失败", e);
         }
         return tbItem;
     }
@@ -107,7 +111,7 @@ public class ItemServiceImpl implements ItemService {
                 return JSON.parseObject(json, TbItemDesc.class);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("查询Redis缓存(商品描述)失败", e);
         }
         TbItemDesc tbItemDesc = itemDescMapper.selectByPrimaryKey(itemId);
         //把查询结果添加到缓存
@@ -117,7 +121,7 @@ public class ItemServiceImpl implements ItemService {
             //设置过期时间，提高缓存的利用率
             jedisClient.expire(ITEM_INFO + ":" + itemId + ":DESC", ITEM_EXPIRE);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("写入Redis缓存(商品描述)失败", e);
         }
         return tbItemDesc;
     }
@@ -136,7 +140,7 @@ public class ItemServiceImpl implements ItemService {
         criteria.andItemIdEqualTo(id);
         List<TbItemParamItem> list = itemParamItemMapper.selectByExampleWithBLOBs(example);
         TbItemParamItem itemParamItem = null;
-        if (null != null && !list.isEmpty()) {
+        if (list != null && !list.isEmpty()) {
             itemParamItem = list.get(0);
         }
         return itemParamItem;

@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.taotao.common.pojo.SearchResult;
 
 import javax.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 商品搜索功能
  */
 @Controller
 public class SearchController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SearchController.class);
 
     @Resource
     private SearchService searchService;
@@ -37,7 +41,7 @@ public class SearchController {
             model.addAttribute("itemList", searchResult.getItemList());
             model.addAttribute("page", page);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("搜索商品失败", e);
         }
         //返回逻辑视图
         return "search";

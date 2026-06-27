@@ -23,8 +23,12 @@ import com.taotao.service.ItemService;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ItemAddMessageListener implements MessageListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(ItemAddMessageListener.class);
     @Autowired
     private ItemService itemService;
     @Autowired
@@ -66,7 +70,7 @@ public class ItemAddMessageListener implements MessageListener {
             //关闭流
             out.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("生成商品静态页面失败, itemId=" + itemIdStr, e);
         }
 
     }
