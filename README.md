@@ -174,43 +174,43 @@ cd taotao-portal-web && mvn tomcat7:run
 
 ```
 taotao-parent
-├── Doc/                              # 项目文档与资源
-│   ├── taotao.sql                    # 数据库初始化脚本
-│   ├── 系统架构.png                   # 架构图
-│   ├── 功能列表.png                   # 功能清单
-│   └── logo.png                      # Logo
+├── 0  Doc/                              # 项目文档与资源
+│    ├── taotao.sql                    # 数据库初始化脚本
+│    ├── 系统架构.png                   # 架构图
+│    ├── 功能列表.png                   # 功能清单
+│    └── logo.png                      # Logo
 │
-├── taotao-common/                    # [工具层] 通用工具类 & POJO
+├── 1  taotao-common/                    # [工具层] 通用工具类 & POJO
 │
-├── taotao-manager/                   # [服务层] 后台管理
-│   ├── taotao-manager-dao/           #   └─ 数据访问层 (Mapper)
-│   ├── taotao-manager-pojo/          #   └─ 数据模型
-│   ├── taotao-manager-interface/     #   └─ Dubbo 接口定义
-│   └── taotao-manager-service/       #   └─ Dubbo 服务实现
+├── 2  taotao-manager/                   # [服务层] 后台管理
+│    ├── 2.1  taotao-manager-dao/        # 数据访问层 (Mapper)
+│    ├── 2.2  taotao-manager-pojo/       # 数据模型
+│    ├── 2.3  taotao-manager-interface/  # Dubbo 接口定义
+│    └── 2.4  taotao-manager-service/    # Dubbo 服务实现
 │
-├── taotao-manager-web/               # [Web层] 后台管理系统
-├── taotao-portal-web/                # [Web层] 门户网站
-├── taotao-search-web/                # [Web层] 搜索前端
-├── taotao-item-web/                  # [Web层] 商品详情
-├── taotao-sso-web/                   # [Web层] 登录/注册
-├── taotao-cart-web/                  # [Web层] 购物车
-├── taotao-order-web/                 # [Web层] 订单前端
+├── 3  taotao-manager-web/               # [Web层] 后台管理系统
+├── 4  taotao-portal-web/                # [Web层] 门户网站
+├── 5  taotao-search-web/                # [Web层] 搜索前端
+├── 6  taotao-item-web/                  # [Web层] 商品详情
+├── 7  taotao-sso-web/                   # [Web层] 登录/注册
+├── 8  taotao-cart-web/                  # [Web层] 购物车
+├── 9  taotao-order-web/                 # [Web层] 订单前端
 │
-├── taotao-content/                   # [服务层] 内容管理
-│   ├── taotao-content-interface/
-│   └── taotao-content-service/
+├── 10  taotao-content/                  # [服务层] 内容管理
+│    ├── 10.1  taotao-content-interface/
+│    └── 10.2  taotao-content-service/
 │
-├── taotao-search/                    # [服务层] 搜索服务
-│   ├── taotao-search-interface/
-│   └── taotao-search-service/
+├── 11  taotao-search/                   # [服务层] 搜索服务
+│    ├── 11.1  taotao-search-interface/
+│    └── 11.2  taotao-search-service/
 │
-├── taotao-sso/                       # [服务层] 单点登录
-│   ├── taotao-sso-interface/
-│   └── taotao-sso-service/
+├── 12  taotao-sso/                      # [服务层] 单点登录
+│    ├── 12.1  taotao-sso-interface/
+│    └── 12.2  taotao-sso-service/
 │
-└── taotao-order/                     # [服务层] 订单服务
-    ├── taotao-order-interface/
-    └── taotao-order-service/
+└── 13  taotao-order/                    # [服务层] 订单服务
+     ├── 13.1  taotao-order-interface/
+     └── 13.2  taotao-order-service/
 ```
 
 ---
