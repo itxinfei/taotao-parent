@@ -6,6 +6,7 @@ import com.taotao.common.utils.CookieUtils;
 import com.taotao.order.pojo.OrderInfo;
 import com.taotao.order.service.OrderService;
 import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbUser;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +30,7 @@ public class OrderController {
     private String CART_KEY;
 
     @Resource
-    private OrderService orderSerive;
+    private OrderService orderService;
 
     /**
      * @param request
@@ -69,9 +70,15 @@ public class OrderController {
      * @return
      */
     @RequestMapping(value = "/order/create", method = RequestMethod.POST)
-    public String createOrder(OrderInfo orderInfo, Model model) {
+    public String createOrder(OrderInfo orderInfo, Model model, HttpServletRequest request) {
+        //从请求中获取登录用户信息（由LoginInterceptor存入）
+        TbUser user = (TbUser) request.getAttribute("USER_INFO");
+        if (user != null) {
+            orderInfo.setUserId(user.getId());
+            orderInfo.setBuyerNick(user.getUsername());
+        }
         //生成订单
-        TaotaoResult result = orderSerive.createOrder(orderInfo);
+        TaotaoResult result = orderService.createOrder(orderInfo);
         //返回逻辑视图
         model.addAttribute("orderId", result.getData().toString());
         model.addAttribute("payment", orderInfo.getPayment());

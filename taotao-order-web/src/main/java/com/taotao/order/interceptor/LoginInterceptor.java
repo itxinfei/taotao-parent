@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.common.utils.CookieUtils;
+import com.taotao.pojo.TbUser;
 import com.taotao.sso.service.UserService;
 
 public class LoginInterceptor implements HandlerInterceptor {
@@ -60,6 +61,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
         //5.如果取到用户信息，就放行。
+        TbUser user = (TbUser) result.getData();
+        request.setAttribute("USER_INFO", user);
         //返回值true表示放行，返回false表示拦截
         return true;
     }

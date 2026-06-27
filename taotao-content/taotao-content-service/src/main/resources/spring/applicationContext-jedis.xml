@@ -15,7 +15,6 @@
     <context:annotation-config/>
 
     <!-- redis单机版 -->
-    <bean id="jedisPoolConfig" class="redis.clients.util.Pool" factory-method="createGenericObjectPoolConfig" abstract="true"/>
     <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
         <constructor-arg name="host" value="172.168.20.221"/>
         <constructor-arg name="port" value="6379"/>

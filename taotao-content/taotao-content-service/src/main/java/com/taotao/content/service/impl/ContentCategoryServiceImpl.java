@@ -164,15 +164,15 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         List<TbContentCategory> list = getContentCategoryListByParentId(parent.getId());
         //判断父节点是否有子节点是判断这个父节点下的所有子节点的状态，如果状态都是2就说明
         //没有子节点了，否则就是有子节点。
-        boolean flag = false;
+        boolean hasActiveChild = false;
         for (TbContentCategory tbContentCategory : list) {
-            if (tbContentCategory.getStatus() == 0) {
-                flag = true;
+            if (tbContentCategory.getStatus() == 1) {
+                hasActiveChild = true;
                 break;
             }
         }
         //如果没有子节点了
-        if (!flag) {
+        if (!hasActiveChild) {
             parent.setIsParent(false);
             contentCategoryMapper.updateByPrimaryKey(parent);
         }

@@ -35,7 +35,7 @@ public class SearchDaoImpl implements SearchDao {
         long numFound = solrDocumentList.getNumFound();
         //初始化一个SolrResult对象并把总数属性进行赋值
         SearchResult searchResult = new SearchResult();
-        searchResult.setTotalPages(numFound);
+        searchResult.setRecordCount(numFound);
         List<SearchItem> itemList = new ArrayList<>();
         //把查询结果封装到SearchItem当中
         for (SolrDocument solrDocument : solrDocumentList) {

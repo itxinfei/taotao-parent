@@ -38,10 +38,11 @@ public class ItemAddMessageListener implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
+        String itemIdStr = null;
         try {
             //从消息中获取商品ID
             TextMessage textMessage = (TextMessage)message;
-            String itemIdStr = textMessage.getText();
+            itemIdStr = textMessage.getText();
             Long itemId = Long.parseLong(itemIdStr);
             //等待事务的提交，采用三次尝试的机会
             TbItem tbItem = null;

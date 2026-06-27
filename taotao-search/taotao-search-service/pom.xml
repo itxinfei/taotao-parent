@@ -10,7 +10,7 @@
     <groupId>com.taotao</groupId>
     <artifactId>taotao-search-service</artifactId>
     <packaging>war</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>taotao-search-service</name>
 
     <dependencies>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>com.taotao</groupId>
             <artifactId>taotao-search-interface</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <!-- Spring -->
         <dependency>
@@ -107,6 +107,11 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

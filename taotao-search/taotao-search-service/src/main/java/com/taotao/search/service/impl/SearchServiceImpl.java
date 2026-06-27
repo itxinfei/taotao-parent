@@ -39,7 +39,7 @@ public class SearchServiceImpl implements SearchService {
         //调用Dao执行查询
         SearchResult searchResult = searchDao.search(query);
         //计算查询结果的总页数
-        long totalNumber = searchResult.getTotalPages();
+        long totalNumber = searchResult.getRecordCount();
         long pages = totalNumber / rows;
         if (totalNumber % rows > 0) {
             pages++;
