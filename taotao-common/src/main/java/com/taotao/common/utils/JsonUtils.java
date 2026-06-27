@@ -10,22 +10,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 淘淘商城自定义响应结构
+ * JSON工具类
+ * 提供对象与JSON字符串之间的序列化和反序列化功能
+ * 
+ * @author taotao
+ * @version 1.0.0
+ * @since 2024-01-01
  */
 public class JsonUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonUtils.class);
 
-    // 定义jackson对象
+    /**
+     * Jackson对象映射器，用于JSON序列化和反序列化
+     * 使用静态常量保证全局唯一实例，避免重复创建开销
+     */
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
-     * 将对象转换成json字符串。
-     * <p>Title: pojoToJson</p>
-     * <p>Description: </p>
-     *
-     * @param data
-     * @return
+     * 将对象序列化为JSON字符串
+     * 
+     * @param data 待序列化的对象，可为null
+     * @return JSON字符串，若序列化失败返回null
      */
     public static String objectToJson(Object data) {
         try {
@@ -38,11 +44,11 @@ public class JsonUtils {
     }
 
     /**
-     * 将json结果集转化为对象
-     *
-     * @param jsonData json数据
-     * @param clazz    对象中的object类型
-     * @return
+     * 将JSON字符串反序列化为指定类型的对象
+     * 
+     * @param jsonData JSON数据字符串，不能为空
+     * @param beanType 目标对象的类型Class
+     * @return 反序列化后的对象，若失败返回null
      */
     public static <T> T jsonToPojo(String jsonData, Class<T> beanType) {
         try {
@@ -55,13 +61,11 @@ public class JsonUtils {
     }
 
     /**
-     * 将json数据转换成pojo对象list
-     * <p>Title: jsonToList</p>
-     * <p>Description: </p>
-     *
-     * @param jsonData
-     * @param beanType
-     * @return
+     * 将JSON字符串反序列化为指定类型的List集合
+     * 
+     * @param jsonData JSON数据字符串，不能为空
+     * @param beanType List中元素的类型Class
+     * @return 反序列化后的List集合，若失败返回null
      */
     public static <T> List<T> jsonToList(String jsonData, Class<T> beanType) {
         JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, beanType);

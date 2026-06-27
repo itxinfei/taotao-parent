@@ -25,6 +25,9 @@
 	<mvc:resources location="/WEB-INF/css/" mapping="/css/**"/>
 	<mvc:resources location="/WEB-INF/js/" mapping="/js/**"/>
 	<mvc:resources location="/WEB-INF/images/" mapping="/images/**"/>
+	<!-- 全局异常处理器 -->
+	<bean class="com.taotao.sso.exception.GlobalExceptionResolver"/>
+
 	<!-- 引用dubbo服务 -->
 	<dubbo:application name="taotao-sso-web"/>
 	<dubbo:registry protocol="zookeeper" address="zookeeper://172.168.20.221:2181"/>

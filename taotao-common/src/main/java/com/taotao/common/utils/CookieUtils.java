@@ -12,29 +12,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Cookie 工具类
+ * Cookie工具类
+ * 提供Cookie的读取、设置和删除操作
+ * 
+ * @author taotao
+ * @version 1.0.0
+ * @since 2024-01-01
  */
 public final class CookieUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(CookieUtils.class);
 
     /**
-     * 得到Cookie的值, 不编码
-     *
-     * @param request
-     * @param cookieName
-     * @return
+     * 获取Cookie的值，不进行URL解码
+     * 
+     * @param request HttpServletRequest对象
+     * @param cookieName Cookie名称
+     * @return Cookie值，若不存在返回null
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName) {
         return getCookieValue(request, cookieName, false);
     }
 
     /**
-     * 得到Cookie的值,
-     *
-     * @param request
-     * @param cookieName
-     * @return
+     * 获取Cookie的值，可选择是否进行URL解码
+     * 
+     * @param request HttpServletRequest对象
+     * @param cookieName Cookie名称
+     * @param isDecoder 是否进行URL解码（UTF-8编码）
+     * @return Cookie值，若不存在返回null
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName, boolean isDecoder) {
         Cookie[] cookieList = request.getCookies();
@@ -60,11 +66,12 @@ public final class CookieUtils {
     }
 
     /**
-     * 得到Cookie的值,
-     *
-     * @param request
-     * @param cookieName
-     * @return
+     * 获取Cookie的值，使用指定编码进行URL解码
+     * 
+     * @param request HttpServletRequest对象
+     * @param cookieName Cookie名称
+     * @param encodeString 解码使用的字符编码
+     * @return Cookie值，若不存在返回null
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName, String encodeString) {
         Cookie[] cookieList = request.getCookies();
@@ -86,7 +93,12 @@ public final class CookieUtils {
     }
 
     /**
-     * 设置Cookie的值 不设置生效时间默认浏览器关闭即失效,也不编码
+     * 设置Cookie的值，不设置生效时间（默认浏览器关闭即失效），不编码
+     * 
+     * @param request HttpServletRequest对象
+     * @param response HttpServletResponse对象
+     * @param cookieName Cookie名称
+     * @param cookieValue Cookie值
      */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue) {
@@ -94,7 +106,13 @@ public final class CookieUtils {
     }
 
     /**
-     * 设置Cookie的值 在指定时间内生效,但不编码
+     * 设置Cookie的值，在指定时间内生效，不编码
+     * 
+     * @param request HttpServletRequest对象
+     * @param response HttpServletResponse对象
+     * @param cookieName Cookie名称
+     * @param cookieValue Cookie值
+     * @param cookieMaxage Cookie生效的最大秒数，-1表示浏览器关闭即失效
      */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue, int cookieMaxage) {
@@ -102,7 +120,13 @@ public final class CookieUtils {
     }
 
     /**
-     * 设置Cookie的值 不设置生效时间,但编码
+     * 设置Cookie的值，不设置生效时间，使用UTF-8编码
+     * 
+     * @param request HttpServletRequest对象
+     * @param response HttpServletResponse对象
+     * @param cookieName Cookie名称
+     * @param cookieValue Cookie值
+     * @param isEncode 是否进行URL编码
      */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue, boolean isEncode) {
@@ -110,7 +134,14 @@ public final class CookieUtils {
     }
 
     /**
-     * 设置Cookie的值 在指定时间内生效, 编码参数
+     * 设置Cookie的值，在指定时间内生效，使用UTF-8编码
+     * 
+     * @param request HttpServletRequest对象
+     * @param response HttpServletResponse对象
+     * @param cookieName Cookie名称
+     * @param cookieValue Cookie值
+     * @param cookieMaxage Cookie生效的最大秒数，-1表示浏览器关闭即失效
+     * @param isEncode 是否进行URL编码
      */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue, int cookieMaxage, boolean isEncode) {
@@ -118,7 +149,14 @@ public final class CookieUtils {
     }
 
     /**
-     * 设置Cookie的值 在指定时间内生效, 编码参数(指定编码)
+     * 设置Cookie的值，在指定时间内生效，使用指定编码
+     * 
+     * @param request HttpServletRequest对象
+     * @param response HttpServletResponse对象
+     * @param cookieName Cookie名称
+     * @param cookieValue Cookie值
+     * @param cookieMaxage Cookie生效的最大秒数，-1表示浏览器关闭即失效
+     * @param encodeString 编码使用的字符编码
      */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue, int cookieMaxage, String encodeString) {
@@ -126,7 +164,11 @@ public final class CookieUtils {
     }
 
     /**
-     * 删除Cookie带cookie域名
+     * 删除指定名称的Cookie
+     * 
+     * @param request HttpServletRequest对象
+     * @param response HttpServletResponse对象
+     * @param cookieName Cookie名称
      */
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response,
                                     String cookieName) {
@@ -134,9 +176,14 @@ public final class CookieUtils {
     }
 
     /**
-     * 设置Cookie的值，并使其在指定时间内生效
-     *
-     * @param cookieMaxage cookie生效的最大秒数
+     * 设置Cookie的值，并使其在指定时间内生效（使用UTF-8编码）
+     * 
+     * @param request HttpServletRequest对象，用于获取域名
+     * @param response HttpServletResponse对象，用于设置Cookie
+     * @param cookieName Cookie名称
+     * @param cookieValue Cookie值
+     * @param cookieMaxage Cookie生效的最大秒数，-1表示浏览器关闭即失效
+     * @param isEncode 是否进行URL编码
      */
     private static final void doSetCookie(HttpServletRequest request, HttpServletResponse response,
                                           String cookieName, String cookieValue, int cookieMaxage, boolean isEncode) {
@@ -149,9 +196,8 @@ public final class CookieUtils {
             Cookie cookie = new Cookie(cookieName, cookieValue);
             if (cookieMaxage > 0)
                 cookie.setMaxAge(cookieMaxage);
-            if (null != request) {// 设置域名的cookie
+            if (null != request) {
                 String domainName = getDomainName(request);
-                System.out.println(domainName);
                 if (!"localhost".equals(domainName)) {
                     cookie.setDomain(domainName);
                 }
@@ -164,9 +210,14 @@ public final class CookieUtils {
     }
 
     /**
-     * 设置Cookie的值，并使其在指定时间内生效
-     *
-     * @param cookieMaxage cookie生效的最大秒数
+     * 设置Cookie的值，并使其在指定时间内生效（使用指定编码）
+     * 
+     * @param request HttpServletRequest对象，用于获取域名
+     * @param response HttpServletResponse对象，用于设置Cookie
+     * @param cookieName Cookie名称
+     * @param cookieValue Cookie值
+     * @param cookieMaxage Cookie生效的最大秒数，-1表示浏览器关闭即失效
+     * @param encodeString 编码使用的字符编码
      */
     private static final void doSetCookie(HttpServletRequest request, HttpServletResponse response,
                                           String cookieName, String cookieValue, int cookieMaxage, String encodeString) {
@@ -179,9 +230,8 @@ public final class CookieUtils {
             Cookie cookie = new Cookie(cookieName, cookieValue);
             if (cookieMaxage > 0)
                 cookie.setMaxAge(cookieMaxage);
-            if (null != request) {// 设置域名的cookie
+            if (null != request) {
                 String domainName = getDomainName(request);
-                System.out.println(domainName);
                 if (!"localhost".equals(domainName)) {
                     cookie.setDomain(domainName);
                 }
@@ -194,7 +244,11 @@ public final class CookieUtils {
     }
 
     /**
-     * 得到cookie的域名
+     * 获取Cookie的域名
+     * 从请求URL中提取域名，支持www.xxx.com.cn、xxx.com、xxx.cn等格式
+     * 
+     * @param request HttpServletRequest对象
+     * @return Cookie域名，若无法获取返回空字符串
      */
     private static final String getDomainName(HttpServletRequest request) {
         String domainName = null;
@@ -210,10 +264,10 @@ public final class CookieUtils {
             final String[] domains = serverName.split("\\.");
             int len = domains.length;
             if (len > 3) {
-                // www.xxx.com.cn
+                // www.xxx.com.cn 格式
                 domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
             } else if (len <= 3 && len > 1) {
-                // xxx.com or xxx.cn
+                // xxx.com 或 xxx.cn 格式
                 domainName = "." + domains[len - 2] + "." + domains[len - 1];
             } else {
                 domainName = serverName;

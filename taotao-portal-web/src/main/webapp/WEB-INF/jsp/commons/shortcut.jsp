@@ -1,14 +1,65 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<script type="text/javascript" src="/js/jquery-1.6.4.js"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js"></script>
+<script type="text/javascript">
+var SSO_URL = "http://localhost:8088";
+var TOKEN_KEY = "TT_TOKEN";
+
+function getQueryParam(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null) return decodeURIComponent(r[2]);
+	return null;
+}
+
+function checkLogin() {
+	var token = $.cookie(TOKEN_KEY);
+	if (token) {
+		$.ajax({
+			url: SSO_URL + "/user/token/" + token,
+			dataType: "jsonp",
+			success: function(data) {
+				if (data.status == 200) {
+					$("#loginbar").html("您好，" + data.data.username + "！<a href='/page/user-center.html'>[个人中心]</a><a href='javascript:logout()'>[退出]</a>");
+				}
+			}
+		});
+	}
+}
+
+function logout() {
+	var token = $.cookie(TOKEN_KEY);
+	if (token) {
+		$.ajax({
+			url: SSO_URL + "/user/logout/" + token,
+			dataType: "jsonp",
+			success: function() {
+				$.cookie(TOKEN_KEY, null, {path: "/"});
+				location.href = "/index.html";
+			}
+		});
+	}
+}
+
+$(function() {
+	var tokenFromUrl = getQueryParam("token");
+	if (tokenFromUrl) {
+		$.cookie(TOKEN_KEY, tokenFromUrl, {path: "/"});
+		history.replaceState({}, "", window.location.pathname);
+	}
+	checkLogin();
+});
+</script>
 <div id="shortcut-2013">
 	<div class="w">
 		<ul class="fl lh">
 			<li class="fore1 ld" clstag="homepage|keycount|home2013|01a"><b></b><a href="javascript:addToFavorite()" rel="nofollow">收藏淘淘</a></li>
 		</ul>
 		<ul class="fr lh">
-			<li class="fore1" id="loginbar" clstag="homepage|keycount|home2013|01b">您好！欢迎来到淘淘！<a href="javascript:login()">[登录]</a>&nbsp;<a href="javascript:regist()">[免费注册]</a></li>
+			<li class="fore1" id="loginbar" clstag="homepage|keycount|home2013|01b">您好！欢迎来到淘淘！<a href="/page/login.html?url=http://localhost:8082/index.html">[登录]</a>&nbsp;<a href="/page/register.html">[免费注册]</a></li>
 			<li class="fore2 ld" clstag="homepage|keycount|home2013|01c">
 				<s></s>
-				<a href="http://jd2008.jd.com/JdHome/OrderList.aspx" rel="nofollow">我的订单</a>
+				<a href="http://localhost:8086/order/list.html" rel="nofollow">我的订单</a>
 			</li>
 			<li class="fore2-1 ld" id="jd-vip">
 				<s></s>

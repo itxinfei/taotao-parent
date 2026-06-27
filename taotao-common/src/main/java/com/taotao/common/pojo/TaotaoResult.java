@@ -9,50 +9,104 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 淘淘商城自定义响应结构
+ * 淘淘商城统一响应结果封装类
+ * 用于封装API接口的返回结果，包含状态码、消息和数据
+ * 
+ * @author taotao
+ * @version 1.0.0
+ * @since 2024-01-01
  */
 public class TaotaoResult implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(TaotaoResult.class);
 
-    // 定义jackson对象
+    /**
+     * Jackson对象映射器，用于JSON序列化和反序列化
+     */
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    // 响应业务状态
+    /**
+     * 响应业务状态码：200表示成功，其他值表示失败
+     */
     private Integer status;
 
-    // 响应消息
+    /**
+     * 响应消息，描述操作结果
+     */
     private String msg;
 
-    // 响应中的数据
+    /**
+     * 响应数据，存放实际返回的业务数据
+     */
     private Object data;
 
+    /**
+     * 构建响应结果对象
+     * 
+     * @param status 状态码
+     * @param msg 消息描述
+     * @param data 响应数据
+     * @return TaotaoResult实例
+     */
     public static TaotaoResult build(Integer status, String msg, Object data) {
         return new TaotaoResult(status, msg, data);
     }
 
+    /**
+     * 构建成功响应结果（带数据）
+     * 
+     * @param data 响应数据
+     * @return TaotaoResult实例，状态码为200，消息为"OK"
+     */
     public static TaotaoResult ok(Object data) {
         return new TaotaoResult(data);
     }
 
+    /**
+     * 构建成功响应结果（无数据）
+     * 
+     * @return TaotaoResult实例，状态码为200，消息为"OK"
+     */
     public static TaotaoResult ok() {
         return new TaotaoResult(null);
     }
 
+    /**
+     * 无参构造函数
+     */
     public TaotaoResult() {
 
     }
 
+    /**
+     * 构建响应结果对象（无数据）
+     * 
+     * @param status 状态码
+     * @param msg 消息描述
+     * @return TaotaoResult实例
+     */
     public static TaotaoResult build(Integer status, String msg) {
         return new TaotaoResult(status, msg, null);
     }
 
+    /**
+     * 全参构造函数
+     * 
+     * @param status 状态码
+     * @param msg 消息描述
+     * @param data 响应数据
+     */
     public TaotaoResult(Integer status, String msg, Object data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
     }
 
+    /**
+     * 构造成功响应（带数据）
+     * 
+     * @param data 响应数据
+     */
     public TaotaoResult(Object data) {
         this.status = 200;
         this.msg = "OK";
@@ -88,11 +142,11 @@ public class TaotaoResult implements Serializable {
     }
 
     /**
-     * 将json结果集转化为TaotaoResult对象
-     *
-     * @param jsonData json数据
-     * @param clazz    TaotaoResult中的object类型
-     * @return
+     * 将JSON字符串反序列化为TaotaoResult对象，并将data字段转换为指定类型
+     * 
+     * @param jsonData JSON数据字符串，不能为空
+     * @param clazz data字段的目标类型，可为null（表示不转换data）
+     * @return TaotaoResult实例，若解析失败返回null
      */
     public static TaotaoResult formatToPojo(String jsonData, Class<?> clazz) {
         try {
@@ -116,10 +170,10 @@ public class TaotaoResult implements Serializable {
     }
 
     /**
-     * 没有object对象的转化
-     *
-     * @param json
-     * @return
+     * 将JSON字符串反序列化为TaotaoResult对象（不转换data字段类型）
+     * 
+     * @param json JSON数据字符串，不能为空
+     * @return TaotaoResult实例，若解析失败返回null
      */
     public static TaotaoResult format(String json) {
         try {
@@ -131,11 +185,11 @@ public class TaotaoResult implements Serializable {
     }
 
     /**
-     * Object是集合转化
-     *
-     * @param jsonData json数据
-     * @param clazz    集合中的类型
-     * @return
+     * 将JSON字符串反序列化为TaotaoResult对象，并将data字段转换为List集合
+     * 
+     * @param jsonData JSON数据字符串，不能为空
+     * @param clazz List中元素的目标类型
+     * @return TaotaoResult实例，data字段为List集合，若解析失败返回null
      */
     public static TaotaoResult formatToList(String jsonData, Class<?> clazz) {
         try {

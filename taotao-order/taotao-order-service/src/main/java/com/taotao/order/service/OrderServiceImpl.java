@@ -3,25 +3,56 @@ package com.taotao.order.service;
 import java.util.Date;
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.taotao.common.pojo.EasyUIDataGridResult;
+import com.taotao.mapper.TbOrderItemMapper;
+import com.taotao.mapper.TbOrderShippingMapper;
+import com.taotao.order.pojo.OrderInfo;
+import com.taotao.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.jedis.service.JedisClient;
-import com.taotao.mapper.TbOrderItemMapper;
 import com.taotao.mapper.TbOrderMapper;
-import com.taotao.mapper.TbOrderShippingMapper;
-import com.taotao.order.pojo.OrderInfo;
-import com.taotao.pojo.TbOrderItem;
-import com.taotao.pojo.TbOrderShipping;
 
 /**
- * 订单服务
+ * 订单服务实现类
+ * 处理订单创建、查询、状态更新等核心逻辑
+ * 订单号使用Redis的incr命令生成，保证分布式环境唯一
+ * 
+ * @author taotao
+ * @version 1.0.0
+ * @since 2024-01-01
  */
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    /**
+     * 订单状态：未付款
+     */
+    private static final Integer ORDER_STATUS_UNPAID = 1;
+
+    /**
+     * 订单状态：已付款
+     */
+    private static final Integer ORDER_STATUS_PAID = 2;
+
+    /**
+     * 订单状态：已发货
+     */
+    private static final Integer ORDER_STATUS_SHIPPED = 4;
+
+    /**
+     * 订单状态：已关闭
+     */
+    private static final Integer ORDER_STATUS_CLOSED = 6;
+
+    /**
+     * 订单Mapper，用于订单数据库操作
+     */
     @Autowired
     private TbOrderMapper tbOrderMapper;
 
@@ -43,46 +74,125 @@ public class OrderServiceImpl implements OrderService {
     @Value("${ORDER_ITEM_ID_GEN_KEY}")
     private String ORDER_ITEM_ID_GEN_KEY;
 
-    /**
-     * @param orderInfo
-     * @return
-     */
     @Override
     public TaotaoResult createOrder(OrderInfo orderInfo) {
-        //生成订单号，可以使用redis的incr方法生成
         if (!jedisClient.exists(ORDER_ID_GEN_KEY)) {
-            //设置初始值
             jedisClient.set(ORDER_ID_GEN_KEY, ORDER_ID_BEGIN_VALUE);
         }
         String orderId = jedisClient.incr(ORDER_ID_GEN_KEY).toString();
-        //需要补全pojo的属性，其它的都是从页面传递过来的
         orderInfo.setOrderId(orderId);
-        //付款状态，1、未付款，2、已付款，3、未发货，4、已发货，5、交易成功，6、交易关闭，刚开始肯定是未付款
-        orderInfo.setStatus(1);
-        //订单创建时间
+        orderInfo.setStatus(ORDER_STATUS_UNPAID);
         orderInfo.setCreateTime(new Date());
         orderInfo.setUpdateTime(new Date());
-        //向订单表插入数据，由于OrderInfo继承自TbOrder，因此这里才可以直接把orderInfo作为参数
         tbOrderMapper.insert(orderInfo);
-        //向订单明细表插入数据
+
         List<TbOrderItem> orderItems = orderInfo.getOrderItems();
         for (TbOrderItem tbOrderItem : orderItems) {
-            //获得明细主键，第一次使用ORDER_ITEM_ID_GEN_KEY这个key，是没有初始值的，那么会自动将初始值变为1
             String oid = jedisClient.incr(ORDER_ITEM_ID_GEN_KEY).toString();
-            //这里之所以只补充了两个属性，是因为tbOrderItem自身已经有itemId了。
-            tbOrderItem.setId(oid);//这是订单明细表的主键
+            tbOrderItem.setId(oid);
             tbOrderItem.setOrderId(orderId);
-            //插入明细数据
             tbOrderItemMapper.insert(tbOrderItem);
         }
-        //向订单物流表插入数据
+
         TbOrderShipping orderShipping = orderInfo.getOrderShipping();
         orderShipping.setOrderId(orderId);
         orderShipping.setCreated(new Date());
         orderShipping.setUpdated(new Date());
         tbOrderShippingMapper.insert(orderShipping);
-        //返回订单号
+
         return TaotaoResult.ok(orderId);
     }
 
+    @Override
+    public EasyUIDataGridResult getOrderList(Long userId, Integer page, Integer rows) {
+        PageHelper.startPage(page, rows);
+
+        TbOrderExample example = new TbOrderExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        example.setOrderByClause("create_time desc");
+
+        List<TbOrder> list = tbOrderMapper.selectByExample(example);
+        PageInfo<TbOrder> pageInfo = new PageInfo<>(list);
+
+        EasyUIDataGridResult result = new EasyUIDataGridResult();
+        result.setRows(list);
+        result.setTotal(pageInfo.getTotal());
+        return result;
+    }
+
+    @Override
+    public EasyUIDataGridResult getAllOrders(Integer page, Integer rows, Integer status) {
+        PageHelper.startPage(page, rows);
+
+        TbOrderExample example = new TbOrderExample();
+        if (status != null) {
+            example.createCriteria().andStatusEqualTo(status);
+        }
+        example.setOrderByClause("create_time desc");
+
+        List<TbOrder> list = tbOrderMapper.selectByExample(example);
+        PageInfo<TbOrder> pageInfo = new PageInfo<>(list);
+
+        EasyUIDataGridResult result = new EasyUIDataGridResult();
+        result.setRows(list);
+        result.setTotal(pageInfo.getTotal());
+        return result;
+    }
+
+    @Override
+    public TaotaoResult updateOrderStatus(String orderId, Integer status, String shippingName, String shippingCode) {
+        TbOrder order = tbOrderMapper.selectByPrimaryKey(orderId);
+        if (order == null) {
+            return TaotaoResult.build(400, "订单不存在");
+        }
+
+        order.setStatus(status);
+        order.setUpdateTime(new Date());
+
+        if (status == 4) {
+            order.setShippingName(shippingName);
+            order.setShippingCode(shippingCode);
+            order.setConsignTime(new Date());
+        }
+
+        tbOrderMapper.updateByPrimaryKeySelective(order);
+        return TaotaoResult.ok();
+    }
+
+    @Override
+    public TaotaoResult getOrderDetail(String orderId) {
+        TbOrder order = tbOrderMapper.selectByPrimaryKey(orderId);
+        if (order == null) {
+            return TaotaoResult.build(400, "订单不存在");
+        }
+
+        TbOrderItemExample itemExample = new TbOrderItemExample();
+        itemExample.createCriteria().andOrderIdEqualTo(orderId);
+        List<TbOrderItem> orderItems = tbOrderItemMapper.selectByExample(itemExample);
+
+        TbOrderShipping orderShipping = tbOrderShippingMapper.selectByPrimaryKey(orderId);
+
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setOrderId(order.getOrderId());
+        orderInfo.setPayment(order.getPayment());
+        orderInfo.setPaymentType(order.getPaymentType());
+        orderInfo.setPostFee(order.getPostFee());
+        orderInfo.setStatus(order.getStatus());
+        orderInfo.setCreateTime(order.getCreateTime());
+        orderInfo.setUpdateTime(order.getUpdateTime());
+        orderInfo.setPaymentTime(order.getPaymentTime());
+        orderInfo.setConsignTime(order.getConsignTime());
+        orderInfo.setEndTime(order.getEndTime());
+        orderInfo.setCloseTime(order.getCloseTime());
+        orderInfo.setShippingName(order.getShippingName());
+        orderInfo.setShippingCode(order.getShippingCode());
+        orderInfo.setUserId(order.getUserId());
+        orderInfo.setBuyerMessage(order.getBuyerMessage());
+        orderInfo.setBuyerNick(order.getBuyerNick());
+        orderInfo.setBuyerRate(order.getBuyerRate());
+        orderInfo.setOrderItems(orderItems);
+        orderInfo.setOrderShipping(orderShipping);
+
+        return TaotaoResult.ok(orderInfo);
+    }
 }

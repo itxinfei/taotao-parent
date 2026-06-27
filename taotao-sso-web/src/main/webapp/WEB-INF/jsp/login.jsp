@@ -78,10 +78,12 @@
 				$.post("/user/login", $("#formlogin").serialize(),function(data){
 					if (data.status == 200) {
 						alert("登录成功！");
+						var token = data.data;
 						if (redirectUrl == "") {
-							location.href = "http://localhost:8082";
+							location.href = "http://localhost:8082?token=" + token;
 						} else {
-							location.href = redirectUrl;
+							var sep = redirectUrl.indexOf('?') > -1 ? '&' : '?';
+							location.href = redirectUrl + sep + "token=" + token;
 						}
 					} else {
 						alert("登录失败，原因是：" + data.msg);

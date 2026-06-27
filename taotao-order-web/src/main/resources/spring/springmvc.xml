@@ -28,6 +28,9 @@
 			<bean class="com.taotao.order.interceptor.LoginInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
+	<!-- 全局异常处理器 -->
+	<bean class="com.taotao.order.exception.GlobalExceptionResolver"/>
+
 	<!-- 引用dubbo服务 -->
 	<dubbo:application name="taotao-order-web"/>
 	<dubbo:registry protocol="zookeeper" address="zookeeper://172.168.20.221:2181"/>

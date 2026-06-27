@@ -3,17 +3,24 @@ package com.taotao.common.utils;
 import java.util.Random;
 
 /**
- * 各种id生成策略
+ * ID生成工具类
+ * 提供基于时间戳的唯一ID生成策略
+ * 
+ * @author taotao
+ * @version 1.0.0
+ * @since 2024-01-01
  */
 public class IDUtils {
 
     /**
-     * 图片名生成
+     * 生成图片文件名
+     * 规则：当前时间戳(毫秒) + 3位随机数，不足3位前面补0
+     * 
+     * @return 图片文件名，格式为13位时间戳+3位随机数
      */
     public static String genImageName() {
         //取当前时间的长整形值包含毫秒
         long millis = System.currentTimeMillis();
-        //long millis = System.nanoTime();
         //加上三位随机数
         Random random = new Random();
         int end3 = random.nextInt(999);
@@ -24,12 +31,14 @@ public class IDUtils {
     }
 
     /**
-     * 商品id生成
+     * 生成商品ID
+     * 规则：当前时间戳(毫秒) + 2位随机数，不足2位前面补0
+     * 
+     * @return 商品ID，格式为13位时间戳+2位随机数
      */
     public static long genItemId() {
         //取当前时间的长整形值包含毫秒
         long millis = System.currentTimeMillis();
-        //long millis = System.nanoTime();
         //加上两位随机数
         Random random = new Random();
         int end2 = random.nextInt(99);

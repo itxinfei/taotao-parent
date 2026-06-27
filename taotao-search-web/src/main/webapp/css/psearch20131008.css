@@ -5858,3 +5858,10 @@ a.d-offline {
 	width: 440px;
 	margin-left: 710px
 }
+
+/* Solr搜索关键词高亮 */
+#plist .p-name em, .p-name em {
+	font-style: normal;
+	color: #E4393C;
+	font-weight: 700
+}

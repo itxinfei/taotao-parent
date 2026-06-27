@@ -15,7 +15,6 @@
 <meta name="format-detection" content="telephone=no" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>出错了 -淘淘商城</title>
-<!--结算页面样式-->
 <link rel="stylesheet" type="text/css" href="/css/base.css" media="all" />
 <link type="text/css" rel="stylesheet" href="/css/order-commons.css"
 	source="widget" />
@@ -95,7 +94,6 @@
 	margin-right: 15px;
 	font-size: 12px
 }
-
 </style>
 			<span class="txt">糟了...系统出错了...</span>
 			<ul class="m">
@@ -107,7 +105,6 @@
 			</ul>
 		</div>
 	</div>
-
 
 	<!-- footer start -->
 	<jsp:include page="../commons/footer.jsp" />

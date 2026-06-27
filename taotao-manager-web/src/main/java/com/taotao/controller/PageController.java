@@ -29,4 +29,15 @@ public class PageController {
     public String showPage(@PathVariable String page) {
         return page;
     }
+
+    /**
+     * REST风格页面跳转
+     *
+     * @param page
+     * @return
+     */
+    @RequestMapping("/rest/page/{page}")
+    public String showRestPage(@PathVariable String page) {
+        return page;
+    }
 }

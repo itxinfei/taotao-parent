@@ -14,21 +14,40 @@ import com.taotao.search.utils.SendMail;
 
 /**
  * 全局异常处理器
+ * 实现Spring MVC的HandlerExceptionResolver接口，统一处理应用中抛出的异常
+ * 
+ * @author taotao
+ * @version 1.0.0
+ * @since 2024-01-01
  */
-public class GlobalExceptioResolver implements HandlerExceptionResolver {
-    //获取logger
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptioResolver.class);
+public class GlobalExceptionResolver implements HandlerExceptionResolver {
 
+    /**
+     * 日志记录器
+     */
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionResolver.class);
+
+    /**
+     * 处理控制器抛出的异常
+     * 处理流程：
+     * 1. 记录异常日志
+     * 2. 异步发送异常通知邮件
+     * 3. 返回错误页面给用户
+     * 
+     * @param request HTTP请求对象
+     * @param response HTTP响应对象
+     * @param handler 处理请求的处理器（控制器方法）
+     * @param e 抛出的异常
+     * @return ModelAndView，包含错误页面视图和错误消息
+     */
     @Override
-    public ModelAndView resolveException(HttpServletRequest rquest, HttpServletResponse response,
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
                                          Object handler, final Exception e) {
-        logger.info("进入全局异常处理器。。。");
-        logger.debug("测试handler的类型：" + handler.getClass());
-        //向日志文件中写入异常
+        // 记录异常日志
         logger.error("系统发生异常", e);
-        //发邮件（采用jmail客户端进行发送）
-        Runnable myRunnable = new Runnable() {
-
+        
+        // 异步发送异常通知邮件
+        Runnable mailRunnable = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -38,14 +57,14 @@ public class GlobalExceptioResolver implements HandlerExceptionResolver {
                 }
             }
         };
-        Thread thread = new Thread(myRunnable);
-        thread.start();
-        //发短信
-        //展示错误页面
+        Thread mailThread = new Thread(mailRunnable);
+        mailThread.start();
+        
+        // 返回错误页面
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("message", "当前网络出现故障，请稍后重试！");
-        //返回逻辑视图，这样回去访问error目录下的error.jsp
         modelAndView.setViewName("error/exception");
+        
         return modelAndView;
     }
 

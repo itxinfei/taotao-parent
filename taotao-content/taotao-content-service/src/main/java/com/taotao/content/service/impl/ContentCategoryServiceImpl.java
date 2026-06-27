@@ -16,11 +16,29 @@ import com.taotao.pojo.TbContentCategoryExample;
 import com.taotao.pojo.TbContentCategoryExample.Criteria;
 
 /**
- * 内容分类管理
+ * 内容分类管理服务实现类
+ * 提供内容分类的增删改查操作
+ * 
+ * @author taotao
+ * @version 1.0.0
+ * @since 2024-01-01
  */
 @Service
 public class ContentCategoryServiceImpl implements ContentCategoryService {
 
+    /**
+     * 分类状态：正常
+     */
+    private static final Integer STATUS_NORMAL = 1;
+
+    /**
+     * 分类状态：删除
+     */
+    private static final Integer STATUS_DELETED = 2;
+
+    /**
+     * 内容分类Mapper，用于数据库操作
+     */
     @Autowired
     private TbContentCategoryMapper contentCategoryMapper;
 
@@ -65,8 +83,8 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         //填充属性值
         contentCategory.setParentId(parentId);
         contentCategory.setName(name);
-        //状态。可选值:1(正常),2(删除)，刚添加的节点肯定是正常的
-        contentCategory.setStatus(1);
+        // 设置状态为正常
+        contentCategory.setStatus(STATUS_NORMAL);
         //刚添加的节点肯定不是父节点
         contentCategory.setIsParent(false);
         //数据库中现在默认的都是1，所以这里我们也写成1
@@ -125,14 +143,14 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
     }
 
     /**
-     * 递归删除节点
-     *
-     * @param parentId
+     * 递归删除子节点
+     * 
+     * @param parentId 父节点ID
      */
     private void deleteNode(long parentId) {
         List<TbContentCategory> list = getContentCategoryListByParentId(parentId);
         for (TbContentCategory contentCategory : list) {
-            contentCategory.setStatus(2);
+            contentCategory.setStatus(STATUS_DELETED);
             contentCategoryMapper.updateByPrimaryKey(contentCategory);
             if (contentCategory.getIsParent()) {
                 deleteNode(contentCategory.getId());
@@ -142,31 +160,30 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
 
     /**
      * 删除内容分类
-     *
-     * @param id
-     * @return
+     * 逻辑删除，将状态改为删除状态，并级联删除所有子节点
+     * 
+     * @param id 分类ID
+     * @return 操作结果
      */
     @Override
     public TaotaoResult deleteContentCategory(long id) {
-        //删除分类，就是改节点的状态为2
+        // 删除分类，将状态改为删除状态
         TbContentCategory contentCategory = contentCategoryMapper.selectByPrimaryKey(id);
-        //状态。可选值:1(正常),2(删除)
-        contentCategory.setStatus(2);
+        contentCategory.setStatus(STATUS_DELETED);
         contentCategoryMapper.updateByPrimaryKey(contentCategory);
-        //我们还需要判断一下要删除的这个节点是否是父节点，如果是父节点，那么就级联
-        //删除这个父节点下的所有子节点（采用递归的方式删除）
+        
+        // 如果是父节点，级联删除所有子节点
         if (contentCategory.getIsParent()) {
             deleteNode(contentCategory.getId());
         }
-        //需要判断父节点当前还有没有子节点，如果有子节点就不用做修改
-        //如果父节点没有子节点了，那么要修改父节点的isParent属性为false即变为叶子节点
+        
+        // 判断父节点是否还有活跃子节点
         TbContentCategory parent = contentCategoryMapper.selectByPrimaryKey(contentCategory.getParentId());
         List<TbContentCategory> list = getContentCategoryListByParentId(parent.getId());
-        //判断父节点是否有子节点是判断这个父节点下的所有子节点的状态，如果状态都是2就说明
-        //没有子节点了，否则就是有子节点。
+        
         boolean hasActiveChild = false;
         for (TbContentCategory tbContentCategory : list) {
-            if (tbContentCategory.getStatus() == 1) {
+            if (tbContentCategory.getStatus().equals(STATUS_NORMAL)) {
                 hasActiveChild = true;
                 break;
             }
