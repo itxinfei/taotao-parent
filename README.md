@@ -109,4 +109,4 @@ Taotao-parent：父工程，打包方式pom，管理jar包的版本号。
 
 - http://localhost:8091/ taotao-order-web
 
-### 淘淘商城已经完结，部分技术已经过时，以后不再更新。
+
