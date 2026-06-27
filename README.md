@@ -32,7 +32,7 @@
 
 ---
 
-## 功能特性
+## 1. 功能特性
 
 | 模块 | 核心功能 |
 |------|----------|
@@ -44,7 +44,7 @@
 
 ---
 
-## 系统架构
+## 2. 系统架构
 
 <p align="center">
   <img src="Doc/系统架构.png" alt="系统架构" width="90%"/>
@@ -60,7 +60,7 @@
 
 ---
 
-## 技术栈
+## 3. 技术栈
 
 <p align="center">
   <img src="https://img.shields.io/badge/Spring-4.2.4-6DB33F?style=for-the-badge&logo=spring">
@@ -85,9 +85,9 @@
 
 ---
 
-## 快速开始
+## 4. 快速开始
 
-### 环境准备
+### 4.1 环境准备
 
 | 类型 | 软件 | 版本要求 |
 |------|------|----------|
@@ -101,7 +101,7 @@
 | 可选 | ActiveMQ | 5.11+（消息队列） |
 | 可选 | FastDFS | 5.0+（文件存储） |
 
-### 第一步：初始化数据库
+### 4.2 初始化数据库
 
 ```bash
 # 创建数据库
@@ -111,7 +111,7 @@ mysql -u root -p -e "CREATE DATABASE taotao CHARACTER SET utf8 COLLATE utf8_gene
 mysql -u root -p taotao < Doc/taotao.sql
 ```
 
-### 第二步：配置数据源
+### 4.3 配置数据源
 
 编辑各 `service` 模块下的 `src/main/resources/properties/db.properties`：
 
@@ -122,7 +122,7 @@ jdbc.username=root
 jdbc.password=your_password
 ```
 
-### 第三步：编译项目
+### 4.4 编译项目
 
 ```bash
 # 先安装父 POM
@@ -132,9 +132,9 @@ mvn install -N
 mvn clean install -DskipTests
 ```
 
-### 第四步：部署运行
+### 4.5 部署运行
 
-#### 方式一：Maven Tomcat 插件（推荐）
+#### 4.5.1 方式一：Maven Tomcat 插件（推荐）
 
 ```bash
 # 终端 1 - 后台管理服务（8083）
@@ -147,11 +147,11 @@ cd taotao-manager-web && mvn tomcat7:run
 cd taotao-portal-web && mvn tomcat7:run
 ```
 
-#### 方式二：独立 Tomcat
+#### 4.5.2 方式二：独立 Tomcat
 
 将各模块 `target/*.war` 复制到 Tomcat `webapps` 目录，按启动顺序启动。
 
-### 启动顺序
+### 4.6 启动顺序
 
 | 顺序 | 模块 | 端口 | 说明 |
 |------|------|------|------|
@@ -170,52 +170,52 @@ cd taotao-portal-web && mvn tomcat7:run
 
 ---
 
-## 项目结构
+## 5. 项目结构
 
 ```
 taotao-parent
-├── 0  Doc/                              # 项目文档与资源
-│    ├── taotao.sql                    # 数据库初始化脚本
-│    ├── 系统架构.png                   # 架构图
-│    ├── 功能列表.png                   # 功能清单
-│    └── logo.png                      # Logo
+├── Doc/                              # 项目文档与资源
+│   ├── taotao.sql                    # 数据库初始化脚本
+│   ├── 系统架构.png                   # 架构图
+│   ├── 功能列表.png                   # 功能清单
+│   └── logo.png                      # Logo
 │
-├── 1  taotao-common/                    # [工具层] 通用工具类 & POJO
+├── taotao-common/                    # [工具层] 通用工具类 & POJO
 │
-├── 2  taotao-manager/                   # [服务层] 后台管理
-│    ├── 2.1  taotao-manager-dao/        # 数据访问层 (Mapper)
-│    ├── 2.2  taotao-manager-pojo/       # 数据模型
-│    ├── 2.3  taotao-manager-interface/  # Dubbo 接口定义
-│    └── 2.4  taotao-manager-service/    # Dubbo 服务实现
+├── taotao-manager/                   # [服务层] 后台管理
+│   ├── taotao-manager-dao/           # 数据访问层 (Mapper)
+│   ├── taotao-manager-pojo/          # 数据模型
+│   ├── taotao-manager-interface/     # Dubbo 接口定义
+│   └── taotao-manager-service/       # Dubbo 服务实现
 │
-├── 3  taotao-manager-web/               # [Web层] 后台管理系统
-├── 4  taotao-portal-web/                # [Web层] 门户网站
-├── 5  taotao-search-web/                # [Web层] 搜索前端
-├── 6  taotao-item-web/                  # [Web层] 商品详情
-├── 7  taotao-sso-web/                   # [Web层] 登录/注册
-├── 8  taotao-cart-web/                  # [Web层] 购物车
-├── 9  taotao-order-web/                 # [Web层] 订单前端
+├── taotao-manager-web/               # [Web层] 后台管理系统
+├── taotao-portal-web/                # [Web层] 门户网站
+├── taotao-search-web/                # [Web层] 搜索前端
+├── taotao-item-web/                  # [Web层] 商品详情
+├── taotao-sso-web/                   # [Web层] 登录/注册
+├── taotao-cart-web/                  # [Web层] 购物车
+├── taotao-order-web/                 # [Web层] 订单前端
 │
-├── 10  taotao-content/                  # [服务层] 内容管理
-│    ├── 10.1  taotao-content-interface/
-│    └── 10.2  taotao-content-service/
+├── taotao-content/                   # [服务层] 内容管理
+│   ├── taotao-content-interface/
+│   └── taotao-content-service/
 │
-├── 11  taotao-search/                   # [服务层] 搜索服务
-│    ├── 11.1  taotao-search-interface/
-│    └── 11.2  taotao-search-service/
+├── taotao-search/                    # [服务层] 搜索服务
+│   ├── taotao-search-interface/
+│   └── taotao-search-service/
 │
-├── 12  taotao-sso/                      # [服务层] 单点登录
-│    ├── 12.1  taotao-sso-interface/
-│    └── 12.2  taotao-sso-service/
+├── taotao-sso/                       # [服务层] 单点登录
+│   ├── taotao-sso-interface/
+│   └── taotao-sso-service/
 │
-└── 13  taotao-order/                    # [服务层] 订单服务
-     ├── 13.1  taotao-order-interface/
-     └── 13.2  taotao-order-service/
+└── taotao-order/                     # [服务层] 订单服务
+    ├── taotao-order-interface/
+    └── taotao-order-service/
 ```
 
 ---
 
-## 访问地址
+## 6. 访问地址
 
 | 模块 | 地址 |
 |------|------|
@@ -228,9 +228,9 @@ taotao-parent
 
 ---
 
-## 配置说明
+## 7. 配置说明
 
-### 外部服务
+### 7.1 外部服务
 
 | 服务 | 默认地址 | 配置位置 |
 |------|----------|----------|
@@ -243,7 +243,7 @@ taotao-parent
 
 ---
 
-## 常见问题
+## 8. 常见问题
 
 <details>
 <summary><b>Maven 编译失败</b></summary>
@@ -288,7 +288,7 @@ mysql -u root -p taotao
 
 ---
 
-## 界面预览
+## 9. 界面预览
 
 | 页面 | 截图 |
 |------|------|
@@ -298,11 +298,11 @@ mysql -u root -p taotao
 
 ---
 
-## 贡献
+## 10. 贡献
 
 欢迎提交 Issue 和 Pull Request！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-## 许可证
+## 11. 许可证
 
 本项目基于 **Apache License 2.0** 开源，详见 [LICENSE](LICENSE)。
 
