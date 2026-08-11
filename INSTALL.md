@@ -80,7 +80,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'your_password';
 mysql -u root -p -e "CREATE DATABASE taotao CHARACTER SET utf8 COLLATE utf8_general_ci;"
 
 # 导入SQL脚本
-mysql -u root -p taotao < Doc/taotao.sql
+mysql -u root -p taotao < docs/taotao.sql
 ```
 
 ### 4. 配置数据源
@@ -434,7 +434,7 @@ chown -R tomcat:tomcat /usr/local/tomcat/logs
 
 ```
 taotao-parent
-├── Doc/                         # 文档和SQL脚本
+├── docs/                        # 文档、SQL脚本与图片
 │   ├── taotao.sql               # 数据库初始化脚本
 │   └── ...
 ├── taotao-common/               # 通用工具类

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Doc/logo.png" alt="taotao-logo" width="200"/>
+  <img src="docs/logo.png" alt="taotao-logo" width="200"/>
 </p>
 
 <h1 align="center">淘淘商城</h1>
@@ -56,13 +56,13 @@
 ## 2. 系统架构
 
 <p align="center">
-  <img src="Doc/系统架构.png" alt="系统架构" width="90%"/>
+  <img src="docs/系统架构.png" alt="系统架构" width="90%"/>
   <br/>
   <em>系统架构图</em>
 </p>
 
 <p align="center">
-  <img src="Doc/功能列表.png" alt="功能列表" width="90%"/>
+  <img src="docs/功能列表.png" alt="功能列表" width="90%"/>
   <br/>
   <em>功能模块总览</em>
 </p>
@@ -152,7 +152,7 @@
 mysql -u root -p -e "CREATE DATABASE taotao CHARACTER SET utf8 COLLATE utf8_general_ci;"
 
 # 导入SQL脚本
-mysql -u root -p taotao < Doc/taotao.sql
+mysql -u root -p taotao < docs/taotao.sql
 ```
 
 ### 4.3 配置数据源
@@ -223,7 +223,7 @@ cd taotao-portal-web && mvn tomcat7:run
 
 ```
 taotao-parent
-├── Doc/                              # 项目文档与资源
+├── docs/                             # 文档与资源（教学文档+SQL+图片）
 │   ├── taotao.sql                    # 数据库初始化脚本
 │   ├── 系统架构.png                   # 架构图
 │   ├── 功能列表.png                   # 功能清单

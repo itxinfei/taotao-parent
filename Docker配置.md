@@ -171,7 +171,7 @@ services:
       MYSQL_DATABASE: taotao
     volumes:
       - ./data/mysql:/var/lib/mysql
-      - ./Doc/taotao.sql:/docker-entrypoint-initdb.d/taotao.sql  # 自动初始化数据库
+      - ./docs/taotao.sql:/docker-entrypoint-initdb.d/taotao.sql  # 自动初始化数据库
     restart: always
 
   redis:
@@ -213,7 +213,7 @@ docker-compose logs -f     # 查看日志
 ```
 
 > 启动后需按上文第 4 节手动创建 Solr 的 `collection1`，并导入数据库初始化脚本
-> （若未使用 initdb 自动导入，则执行 `mysql -u root -p taotao < Doc/taotao.sql`）。
+> （若未使用 initdb 自动导入，则执行 `mysql -u root -p taotao < docs/taotao.sql`）。
 
 ## 四、部署后检查清单
 

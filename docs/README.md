@@ -30,7 +30,7 @@
 ### 第二阶段：跑起来（第 02 篇）
 
 - 按文档搭建 MySQL、Redis、ZooKeeper、Solr、ActiveMQ、FastDFS
-- 初始化数据库，导入 `Doc/taotao.sql`
+- 初始化数据库，导入 `taotao.sql`
 - 按启动顺序依次启动 5 个 Service 与 7 个 Web 模块
 - 逐页验证：后台管理 → 门户 → 搜索 → 商品详情 → 登录 → 购物车 → 下单
 
