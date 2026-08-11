@@ -174,6 +174,10 @@ public class ContentServiceImpl implements ContentService {
     public TaotaoResult deleteContent(String ids) {
         String[] idList = ids.split(",");
         for (String id : idList) {
+            // 过滤空ID，避免空字符串转换异常
+            if (StringUtils.isBlank(id)) {
+                continue;
+            }
             TbContent content = contentMapper.selectByPrimaryKey(Long.valueOf(id));
             if (content != null) {
                 try {

@@ -31,6 +31,8 @@
         <!-- 设定文件上传的最大值5MB，5*1024*1024 -->
         <property name="maxUploadSize" value="5242880"></property>
     </bean>
+    <!-- 全局异常处理器 -->
+    <bean class="com.taotao.exception.GlobalExceptionResolver"/>
     <!-- 引用dubbo服务 -->
     <dubbo:application name="taotao-manager-web"/>
     <dubbo:registry protocol="zookeeper" address="zookeeper://172.168.20.221:2181"/>

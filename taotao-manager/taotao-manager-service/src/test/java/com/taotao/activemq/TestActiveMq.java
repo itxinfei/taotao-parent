@@ -4,8 +4,12 @@ import javax.jms.*;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestActiveMq {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestActiveMq.class);
 
     @Test
     public void testQueueProducer() throws JMSException{
@@ -74,9 +78,9 @@ public class TestActiveMq {
                     TextMessage textMessage = (TextMessage)message;
                     try {
                         String text = textMessage.getText();
-                        System.out.println(text);
+                        logger.info(text);
                     } catch (JMSException e) {
-                        e.printStackTrace();
+                        logger.error("处理消息异常", e);
                     }
                 }
             }
@@ -158,9 +162,9 @@ public class TestActiveMq {
                     TextMessage textMessage = (TextMessage)message;
                     try {
                         String text = textMessage.getText();
-                        System.out.println(text);
+                        logger.info(text);
                     } catch (JMSException e) {
-                        e.printStackTrace();
+                        logger.error("处理消息异常", e);
                     }
                 }
             }
@@ -168,7 +172,7 @@ public class TestActiveMq {
         //8.程序等待接收用户结束操作
         //程序自己并不知道什么时候有消息，也不知道什么时候不再发送消息了，这就需要手动干预，
         //当我们想停止接收消息时，可以在控制台输入任意键，然后回车即可结束接收操作（也可以直接按回车）。
-        System.out.println("topic消费者1111。。。。。");
+        logger.info("topic消费者1111。。。。。");
         System.in.read();
         //9.关闭资源
         consumer.close();
@@ -261,9 +265,9 @@ public class TestActiveMq {
                     TextMessage textMessage = (TextMessage)message;
                     try {
                         String text = textMessage.getText();
-                        System.out.println(text);
+                        logger.info(text);
                     } catch (JMSException e) {
-                        e.printStackTrace();
+                        logger.error("处理消息异常", e);
                     }
                 }
             }
@@ -271,7 +275,7 @@ public class TestActiveMq {
         //10.程序等待接收用户结束操作
         //程序自己并不知道什么时候有消息，也不知道什么时候不再发送消息了，这就需要手动干预，
         //当我们想停止接收消息时，可以在控制台输入任意键，然后回车即可结束接收操作（也可以直接按回车）。
-        System.out.println("topic消费者1111。。。。。");
+        logger.info("topic消费者1111。。。。。");
         System.in.read();
         //11.关闭资源
         consumer.close();
