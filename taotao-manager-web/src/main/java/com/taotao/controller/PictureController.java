@@ -44,9 +44,19 @@ public class PictureController {
     public String picUpload(MultipartFile uploadFile) {
         FastDFSClient fastDFSClient = null;
         try {
+            // 空文件直接返回失败
+            if (uploadFile == null || uploadFile.isEmpty()) {
+                Map<String, Object> errResult = new HashMap<>();
+                errResult.put("error", 1);
+                errResult.put("message", "请选择要上传的图片");
+                return JsonUtils.objectToJson(errResult);
+            }
             // 接收上传的文件，取扩展名
             String originalFilename = uploadFile.getOriginalFilename();
-            String extName = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+            String extName = null;
+            if (originalFilename != null && originalFilename.lastIndexOf(".") != -1) {
+                extName = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+            }
 
             // 上传到图片服务器
             fastDFSClient = new FastDFSClient("classpath:resource/client.conf");

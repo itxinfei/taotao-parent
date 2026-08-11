@@ -108,6 +108,10 @@ public class OrderController {
 
         if (result.getStatus() == 200) {
             CookieUtils.setCookie(request, response, CART_KEY, "[]", 0, true);
+        } else {
+            // 订单创建失败，返回错误提示
+            model.addAttribute("message", result.getMsg() != null ? result.getMsg() : "订单创建失败");
+            return "error/exception";
         }
 
         model.addAttribute("orderId", result.getData().toString());

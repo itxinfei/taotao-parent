@@ -26,6 +26,11 @@ public class ItemController {
     public String showItem(@PathVariable Long itemId, Model model) {
         //获取商品基本信息
         TbItem tbItem = itemService.getItemById(itemId);
+        //商品不存在时返回错误页面
+        if (tbItem == null) {
+            model.addAttribute("message", "商品不存在或已下架");
+            return "error/exception";
+        }
         Item item = new Item(tbItem);
         //获取商品描述信息
         TbItemDesc tbItemDesc = itemService.getItemDescById(itemId);

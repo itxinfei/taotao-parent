@@ -172,7 +172,8 @@ public final class CookieUtils {
      */
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response,
                                     String cookieName) {
-        doSetCookie(request, response, cookieName, "", -1, false);
+        // maxAge=0 表示立即删除Cookie
+        doSetCookie(request, response, cookieName, "", 0, false);
     }
 
     /**
@@ -194,7 +195,7 @@ public final class CookieUtils {
                 cookieValue = URLEncoder.encode(cookieValue, "utf-8");
             }
             Cookie cookie = new Cookie(cookieName, cookieValue);
-            if (cookieMaxage > 0)
+            if (cookieMaxage >= 0)
                 cookie.setMaxAge(cookieMaxage);
             if (null != request) {
                 String domainName = getDomainName(request);
@@ -228,7 +229,7 @@ public final class CookieUtils {
                 cookieValue = URLEncoder.encode(cookieValue, encodeString);
             }
             Cookie cookie = new Cookie(cookieName, cookieValue);
-            if (cookieMaxage > 0)
+            if (cookieMaxage >= 0)
                 cookie.setMaxAge(cookieMaxage);
             if (null != request) {
                 String domainName = getDomainName(request);
@@ -258,9 +259,15 @@ public final class CookieUtils {
             domainName = "";
         } else {
             serverName = serverName.toLowerCase();
-            serverName = serverName.substring(7);
+            // 兼容 http:// 与 https:// 前缀
+            int schemeEnd = serverName.indexOf("://");
+            if (schemeEnd > 0) {
+                serverName = serverName.substring(schemeEnd + 3);
+            }
             final int end = serverName.indexOf("/");
-            serverName = serverName.substring(0, end);
+            if (end > 0) {
+                serverName = serverName.substring(0, end);
+            }
             final String[] domains = serverName.split("\\.");
             int len = domains.length;
             if (len > 3) {
