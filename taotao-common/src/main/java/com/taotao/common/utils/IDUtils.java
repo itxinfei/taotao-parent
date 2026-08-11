@@ -23,7 +23,7 @@ public class IDUtils {
         long millis = System.currentTimeMillis();
         //加上三位随机数
         Random random = new Random();
-        int end3 = random.nextInt(999);
+        int end3 = random.nextInt(1000);
         //如果不足三位前面补0
         String str = millis + String.format("%03d", end3);
 
@@ -41,15 +41,10 @@ public class IDUtils {
         long millis = System.currentTimeMillis();
         //加上两位随机数
         Random random = new Random();
-        int end2 = random.nextInt(99);
+        int end2 = random.nextInt(100);
         //如果不足两位前面补0
         String str = millis + String.format("%02d", end2);
-        long id = new Long(str);
+        long id = Long.parseLong(str);
         return id;
-    }
-
-    public static void main(String[] args) {
-        for (int i = 0; i < 100; i++)
-            System.out.println(genItemId());
     }
 }

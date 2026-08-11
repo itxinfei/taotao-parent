@@ -52,10 +52,10 @@ public class SearchServiceImpl implements SearchService {
         if (page < 1) {
             page = 1;
         }
-        query.setStart((page - 1) * rows);
         if (rows < 1) {
             rows = 10;
         }
+        query.setStart((page - 1) * rows);
         query.setRows(rows);
         
         // 设置默认搜索域为商品标题

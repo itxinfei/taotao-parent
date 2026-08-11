@@ -87,18 +87,22 @@ public class OrderServiceImpl implements OrderService {
         tbOrderMapper.insert(orderInfo);
 
         List<TbOrderItem> orderItems = orderInfo.getOrderItems();
-        for (TbOrderItem tbOrderItem : orderItems) {
-            String oid = jedisClient.incr(ORDER_ITEM_ID_GEN_KEY).toString();
-            tbOrderItem.setId(oid);
-            tbOrderItem.setOrderId(orderId);
-            tbOrderItemMapper.insert(tbOrderItem);
+        if (orderItems != null) {
+            for (TbOrderItem tbOrderItem : orderItems) {
+                String oid = jedisClient.incr(ORDER_ITEM_ID_GEN_KEY).toString();
+                tbOrderItem.setId(oid);
+                tbOrderItem.setOrderId(orderId);
+                tbOrderItemMapper.insert(tbOrderItem);
+            }
         }
 
         TbOrderShipping orderShipping = orderInfo.getOrderShipping();
-        orderShipping.setOrderId(orderId);
-        orderShipping.setCreated(new Date());
-        orderShipping.setUpdated(new Date());
-        tbOrderShippingMapper.insert(orderShipping);
+        if (orderShipping != null) {
+            orderShipping.setOrderId(orderId);
+            orderShipping.setCreated(new Date());
+            orderShipping.setUpdated(new Date());
+            tbOrderShippingMapper.insert(orderShipping);
+        }
 
         return TaotaoResult.ok(orderId);
     }

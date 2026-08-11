@@ -1,5 +1,6 @@
 package com.taotao.sso.service.impl;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -144,7 +145,7 @@ public class UserServiceImpl implements UserService {
         tbUser.setUpdated(new Date());
         
         // 密码MD5加密
-        String md5Str = DigestUtils.md5DigestAsHex(tbUser.getPassword().getBytes());
+        String md5Str = DigestUtils.md5DigestAsHex(tbUser.getPassword().getBytes(StandardCharsets.UTF_8));
         tbUser.setPassword(md5Str);
         
         // 插入数据库
@@ -174,7 +175,7 @@ public class UserServiceImpl implements UserService {
         
         // 2. 验证密码（MD5加密比对）
         TbUser user = list.get(0);
-        if (!DigestUtils.md5DigestAsHex(password.getBytes()).equals(user.getPassword())) {
+        if (!DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)).equals(user.getPassword())) {
             return TaotaoResult.build(400, "用户名或密码不正确！");
         }
         
@@ -245,7 +246,7 @@ public class UserServiceImpl implements UserService {
 
         // 如果更新密码，需要重新加密
         if (StringUtils.isNotBlank(tbUser.getPassword())) {
-            tbUser.setPassword(DigestUtils.md5DigestAsHex(tbUser.getPassword().getBytes()));
+            tbUser.setPassword(DigestUtils.md5DigestAsHex(tbUser.getPassword().getBytes(StandardCharsets.UTF_8)));
         } else {
             tbUser.setPassword(null);
         }

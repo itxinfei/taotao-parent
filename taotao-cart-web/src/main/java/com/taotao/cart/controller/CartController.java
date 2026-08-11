@@ -177,7 +177,7 @@ public class CartController {
             for (TbItem item : cartItemList) {
                 jedis.hset(key, item.getId().toString(), JSON.toJSONString(item));
             }
-            jedis.expire(key, 604800);
+            jedis.expire(key, CART_EXPIRE);
         } catch (Exception e) {
             // Redis同步失败不影响主业务流程
         } finally {

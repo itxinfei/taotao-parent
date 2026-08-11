@@ -4,6 +4,8 @@ package com.taotao.utils;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
 
+import java.io.IOException;
+
 /**
  * FastDFS工具类上传
  */
@@ -72,5 +74,25 @@ public class FastDFSClient {
 
     public String uploadFile(byte[] fileContent, String extName) throws Exception {
         return uploadFile(fileContent, extName, null);
+    }
+
+    /**
+     * 释放FastDFS连接资源
+     */
+    public void close() {
+        if (storageServer != null) {
+            try {
+                storageServer.close();
+            } catch (IOException e) {
+                // 忽略关闭异常
+            }
+        }
+        if (trackerServer != null) {
+            try {
+                trackerServer.close();
+            } catch (IOException e) {
+                // 忽略关闭异常
+            }
+        }
     }
 }

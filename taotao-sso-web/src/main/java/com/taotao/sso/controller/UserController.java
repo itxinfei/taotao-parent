@@ -85,7 +85,7 @@ public class UserController {
     public TaotaoResult login(String username, String password,
                               HttpServletRequest request, HttpServletResponse response) {
         TaotaoResult result = userService.login(username, password);
-        if ("200".equals(result.getStatus())) {
+        if (result.getStatus() != null && result.getStatus() == 200) {
             // 将Token写入Cookie
             CookieUtils.setCookie(request, response, TOKEN_KEY, result.getData().toString());
         }

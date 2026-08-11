@@ -97,7 +97,7 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         //添加一个节点需要判断父节点是不是叶子节点，如果父节点是叶子节点的话，
         //需要改成父节点状态
         TbContentCategory parent = contentCategoryMapper.selectByPrimaryKey(parentId);
-        if (!parent.getIsParent()) {
+        if (parent != null && !parent.getIsParent()) {
             parent.setIsParent(true);
             contentCategoryMapper.updateByPrimaryKey(parent);
         }
@@ -179,6 +179,9 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         
         // 判断父节点是否还有活跃子节点
         TbContentCategory parent = contentCategoryMapper.selectByPrimaryKey(contentCategory.getParentId());
+        if (parent == null) {
+            return TaotaoResult.ok();
+        }
         List<TbContentCategory> list = getContentCategoryListByParentId(parent.getId());
         
         boolean hasActiveChild = false;

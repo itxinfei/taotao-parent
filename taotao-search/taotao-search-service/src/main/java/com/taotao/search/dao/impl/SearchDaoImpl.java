@@ -80,10 +80,11 @@ public class SearchDaoImpl implements SearchDao {
             
             // 处理高亮显示的标题
             Map<String, Map<String, List<String>>> highlighting = response.getHighlighting();
-            List<String> list = highlighting.get(solrDocument.get("id")).get("item_title");
+            Map<String, List<String>> highlightMap = highlighting.get(solrDocument.get("id"));
             String title = "";
-            if (list != null && list.size() > 0) {
-                title = list.get(0);
+            if (highlightMap != null && highlightMap.get("item_title") != null
+                    && highlightMap.get("item_title").size() > 0) {
+                title = highlightMap.get("item_title").get(0);
             } else {
                 title = (String) solrDocument.get("item_title");
             }

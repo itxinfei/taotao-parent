@@ -127,7 +127,11 @@ public class ContentServiceImpl implements ContentService {
         content.setCreated(new Date());
         content.setUpdated(new Date());
         contentMapper.insert(content);
-        jedisClient.hdel(INDEX_CONTENT, content.getCategoryId().toString());
+        try {
+            jedisClient.hdel(INDEX_CONTENT, content.getCategoryId().toString());
+        } catch (Exception e) {
+            logger.error("删除Redis缓存(内容分类ID={})失败", content.getCategoryId(), e);
+        }
         return TaotaoResult.ok();
     }
 
@@ -145,7 +149,11 @@ public class ContentServiceImpl implements ContentService {
     public TaotaoResult updateContent(TbContent content) {
         TbContent oldContent = contentMapper.selectByPrimaryKey(content.getId());
         if (oldContent != null) {
-            jedisClient.hdel(INDEX_CONTENT, oldContent.getCategoryId().toString());
+            try {
+                jedisClient.hdel(INDEX_CONTENT, oldContent.getCategoryId().toString());
+            } catch (Exception e) {
+                logger.error("删除Redis缓存(内容分类ID={})失败", oldContent.getCategoryId(), e);
+            }
         }
         content.setUpdated(new Date());
         contentMapper.updateByPrimaryKey(content);
@@ -168,7 +176,11 @@ public class ContentServiceImpl implements ContentService {
         for (String id : idList) {
             TbContent content = contentMapper.selectByPrimaryKey(Long.valueOf(id));
             if (content != null) {
-                jedisClient.hdel(INDEX_CONTENT, content.getCategoryId().toString());
+                try {
+                    jedisClient.hdel(INDEX_CONTENT, content.getCategoryId().toString());
+                } catch (Exception e) {
+                    logger.error("删除Redis缓存(内容分类ID={})失败", content.getCategoryId(), e);
+                }
             }
             contentMapper.deleteByPrimaryKey(Long.valueOf(id));
         }

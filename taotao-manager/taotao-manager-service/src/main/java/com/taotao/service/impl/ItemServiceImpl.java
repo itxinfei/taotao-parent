@@ -275,7 +275,13 @@ public class ItemServiceImpl implements ItemService {
         itemDesc.setItemId(tbItem.getId());
         itemDesc.setItemDesc(desc);
         itemDesc.setUpdated(new Date());
-        itemDescMapper.updateByPrimaryKeySelective(itemDesc);
+        // 商品描述记录不存在时执行插入，避免更新丢失描述信息
+        if (itemDescMapper.selectByPrimaryKey(tbItem.getId()) == null) {
+            itemDesc.setCreated(new Date());
+            itemDescMapper.insert(itemDesc);
+        } else {
+            itemDescMapper.updateByPrimaryKeySelective(itemDesc);
+        }
 
         // 删除缓存
         try {
@@ -308,6 +314,9 @@ public class ItemServiceImpl implements ItemService {
     public TaotaoResult deleteItem(String ids) {
         String[] idArray = ids.split(",");
         for (String id : idArray) {
+            if (StringUtils.isBlank(id)) {
+                continue;
+            }
             TbItem tbItem = new TbItem();
             tbItem.setId(Long.parseLong(id));
             tbItem.setStatus((byte) 3);
@@ -335,6 +344,9 @@ public class ItemServiceImpl implements ItemService {
     public TaotaoResult instock(String ids) {
         String[] idArray = ids.split(",");
         for (String id : idArray) {
+            if (StringUtils.isBlank(id)) {
+                continue;
+            }
             TbItem tbItem = new TbItem();
             tbItem.setId(Long.parseLong(id));
             tbItem.setStatus((byte) 2);
@@ -361,6 +373,9 @@ public class ItemServiceImpl implements ItemService {
     public TaotaoResult reshelf(String ids) {
         String[] idArray = ids.split(",");
         for (String id : idArray) {
+            if (StringUtils.isBlank(id)) {
+                continue;
+            }
             TbItem tbItem = new TbItem();
             tbItem.setId(Long.parseLong(id));
             tbItem.setStatus((byte) 1);
