@@ -39,7 +39,7 @@ taotao-order/
 cd taotao-order/taotao-order-service
 mvn tomcat7:run
 
-# 默认端口：8090
+# Dubbo服务端口：20884
 ```
 
 ### 依赖关系

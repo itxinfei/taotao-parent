@@ -45,7 +45,7 @@ taotao-manager/
 cd taotao-manager/taotao-manager-service
 mvn tomcat7:run
 
-# 默认端口：8083
+# Dubbo服务端口：20880
 ```
 
 ### 依赖关系

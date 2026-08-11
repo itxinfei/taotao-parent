@@ -39,7 +39,7 @@ taotao-sso/
 cd taotao-sso/taotao-sso-service
 mvn tomcat7:run
 
-# 默认端口：8087
+# Dubbo服务端口：20883
 ```
 
 ### 依赖关系

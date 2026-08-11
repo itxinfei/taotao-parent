@@ -58,6 +58,41 @@
   <em>功能模块总览</em>
 </p>
 
+### 2.1 服务调用关系
+
+```
+浏览器
+  │
+  ├── taotao-manager-web  (后台管理，8081)
+  ├── taotao-portal-web   (门户网站，8082)
+  ├── taotao-search-web   (搜索前端，8085)
+  ├── taotao-item-web     (商品详情，8086)
+  ├── taotao-sso-web      (SSO前端，8088)
+  ├── taotao-cart-web     (购物车，8089)
+  └── taotao-order-web    (订单前端，8091)
+          │  Dubbo RPC（经 ZooKeeper 注册中心）
+          ▼
+  ├── taotao-manager-service  (20880)  商品/类目/规格
+  ├── taotao-content-service  (20881)  内容管理
+  ├── taotao-search-service   (20882)  搜索服务
+  ├── taotao-sso-service      (20883)  单点登录
+  └── taotao-order-service    (20884)  订单服务
+          │
+          ▼
+  MySQL ─ Redis ─ Solr ─ ActiveMQ ─ FastDFS
+```
+
+### 2.2 外部依赖
+
+| 中间件 | 用途 |
+|--------|------|
+| ZooKeeper | Dubbo 服务注册与发现 |
+| Redis | 缓存、Session、订单号生成 |
+| Solr | 商品全文检索索引库 |
+| ActiveMQ | 商品变更消息通知（索引同步、页面静态化） |
+| FastDFS | 商品图片存储 |
+| MySQL | 业务数据持久化 |
+
 ---
 
 ## 3. 技术栈
@@ -130,6 +165,9 @@ mvn install -N
 
 # 编译所有模块（跳过测试）
 mvn clean install -DskipTests
+
+# 仅编译验证（不打包）
+mvn compile test-compile
 ```
 
 ### 4.5 部署运行
@@ -137,7 +175,7 @@ mvn clean install -DskipTests
 #### 4.5.1 方式一：Maven Tomcat 插件（推荐）
 
 ```bash
-# 终端 1 - 后台管理服务（8083）
+# 终端 1 - 后台管理服务（Dubbo 20880）
 cd taotao-manager/taotao-manager-service && mvn tomcat7:run
 
 # 终端 2 - 后台管理 Web（8081）
@@ -149,24 +187,26 @@ cd taotao-portal-web && mvn tomcat7:run
 
 #### 4.5.2 方式二：独立 Tomcat
 
-将各模块 `target/*.war` 复制到 Tomcat `webapps` 目录，按启动顺序启动。
+将各模块 `target/*.war` 复制到 Tomcat `webapps` 目录，按启动顺序启动。详见 [INSTALL.md](INSTALL.md)。
 
-### 4.6 启动顺序
+### 4.6 启动顺序与端口
 
-| 顺序 | 模块 | 端口 | 说明 |
-|------|------|------|------|
-| 1 | taotao-manager-service | 8083 | Dubbo 服务提供者 |
-| 2 | taotao-content-service | 8080 | 内容服务 |
-| 3 | taotao-search-service | 8084 | 搜索服务 |
-| 4 | taotao-sso-service | 8087 | 单点登录服务 |
-| 5 | taotao-order-service | 8090 | 订单服务 |
-| 6 | taotao-manager-web | 8081 | 后台管理 |
-| 7 | taotao-portal-web | 8082 | 门户网站 |
-| 8 | taotao-search-web | 8085 | 搜索前端 |
-| 9 | taotao-item-web | 8086 | 商品详情 |
-| 10 | taotao-sso-web | 8088 | SSO 前端 |
-| 11 | taotao-cart-web | 8089 | 购物车 |
-| 12 | taotao-order-web | 8091 | 订单前端 |
+> **注意**：`service` 模块使用 Dubbo 协议端口（用于 RPC 通信），`web` 模块使用 Tomcat 端口（用于 HTTP 访问）。
+
+| 顺序 | 模块 | 端口 | 类型 | 说明 |
+|------|------|------|------|------|
+| 1 | taotao-manager-service | 20880 | Dubbo | 商品/类目/规格服务 |
+| 2 | taotao-content-service | 20881 | Dubbo | 内容服务 |
+| 3 | taotao-search-service | 20882 | Dubbo | 搜索服务 |
+| 4 | taotao-sso-service | 20883 | Dubbo | 单点登录服务 |
+| 5 | taotao-order-service | 20884 | Dubbo | 订单服务 |
+| 6 | taotao-manager-web | 8081 | HTTP | 后台管理 |
+| 7 | taotao-portal-web | 8082 | HTTP | 门户网站 |
+| 8 | taotao-search-web | 8085 | HTTP | 搜索前端 |
+| 9 | taotao-item-web | 8086 | HTTP | 商品详情 |
+| 10 | taotao-sso-web | 8088 | HTTP | SSO 前端 |
+| 11 | taotao-cart-web | 8089 | HTTP | 购物车 |
+| 12 | taotao-order-web | 8091 | HTTP | 订单前端 |
 
 ---
 
@@ -225,6 +265,7 @@ taotao-parent
 | 商品详情 | [http://localhost:8086](http://localhost:8086) |
 | SSO 登录 | [http://localhost:8088](http://localhost:8088) |
 | 购物车 | [http://localhost:8089](http://localhost:8089) |
+| 订单中心 | [http://localhost:8091](http://localhost:8091) |
 
 ---
 
@@ -234,16 +275,67 @@ taotao-parent
 
 | 服务 | 默认地址 | 配置位置 |
 |------|----------|----------|
-| Redis | `172.168.20.221:6379` | `applicationContext-jedis.xml`（各 service 模块） |
+| MySQL | `localhost:3306` | `properties/db.properties`（各 service 模块） |
+| Redis | `172.168.20.221:6379` | `spring/applicationContext-jedis.xml`（各 service 模块） |
 | ZooKeeper | `172.168.20.221:2181` | spring 配置文件（各 web/service 模块） |
-| Solr | `http://172.168.20.221:8983/solr/collection1` | `applicationContext-solr.xml`（search-service） |
-| ActiveMQ | `tcp://172.168.20.221:61616` | `applicationContext-activemq.xml`（manager/search-service） |
+| Solr | `http://172.168.20.221:8983/solr/collection1` | `spring/applicationContext-solr.xml`（search-service） |
+| ActiveMQ | `tcp://172.168.20.221:61616` | `spring/applicationContext-activemq.xml`（manager/search-service） |
+| FastDFS | `172.168.20.221:22122` | `resource/client.conf`（manager-web） |
 
 若在本地运行（无外部服务），将所有地址改为 `localhost`。
 
+### 7.2 业务配置
+
+| 配置项 | 说明 | 配置位置 |
+|--------|------|----------|
+| 商品缓存过期时间 | `ITEM_EXPIRE=86400`（秒） | `resource.properties`（manager-service） |
+| 静态页面输出路径 | `HTML_OUT_PATH` | `resource.properties`（item-web） |
+| 图片服务器地址 | `IMAGE_SERVER_URL` | `resource.properties`（manager-web） |
+| 购物车 Cookie Key | `CART_KEY=TT_CART` | `resource.properties`（cart/order-web） |
+| 登录 Token Key | `TOKEN_KEY=TT_TOKEN` | `resource.properties`（order/sso-web） |
+| 搜索每页条数 | `SEARCH_RESULT_ROWS=60` | `resource.properties`（search-web） |
+| 邮件告警凭据 | `mail.from` / `mail.authCode` / `mail.to` | 系统属性或环境变量（search-web） |
+
 ---
 
-## 8. 常见问题
+## 8. 部署与运维
+
+### 8.1 部署方式
+
+- **本地开发**：Maven Tomcat 插件或独立 Tomcat，详见 [INSTALL.md](INSTALL.md)
+- **Docker 部署**：中间件容器化部署脚本，详见 [Docker配置.md](Docker配置.md)
+- **变更记录**：各版本变更，详见 [CHANGELOG.md](CHANGELOG.md)
+
+### 8.2 日志
+
+各模块日志由 log4j 输出到 `${catalina.home}/logs/`，分为：
+
+| 日志文件 | 级别 | 内容 |
+|----------|------|------|
+| `taotao-xxx.log` | INFO | 常规业务日志 |
+| `taotao-xxx-error.log` | ERROR | 错误日志（独立文件） |
+
+### 8.3 常见运维操作
+
+```bash
+# 检查服务端口占用
+netstat -ano | findstr :8081          # Windows
+netstat -tlnp | grep -E "8081|20880"  # Linux
+
+# 查看 Dubbo 服务是否注册成功（需安装 zookeeper 客户端）
+zkCli.sh -server localhost:2181
+ls /dubbo
+
+# 查看 Solr 索引
+curl "http://localhost:8983/solr/collection1/select?q=*:*"
+
+# 检查 Redis 缓存
+redis-cli -h localhost keys "ITEM_INFO*"
+```
+
+---
+
+## 9. 常见问题
 
 <details>
 <summary><b>Maven 编译失败</b></summary>
@@ -286,9 +378,32 @@ mysql -u root -p taotao
 
 </details>
 
+<details>
+<summary><b>Dubbo 服务找不到（No provider）</b></summary>
+
+**原因**：service 模块未启动或 ZooKeeper 不可达
+
+1. 确认 5 个 service 模块按顺序启动完成
+2. 确认 `dubbo:registry` 的 ZooKeeper 地址正确
+3. 确认各 web 模块 `dubbo:reference` 接口与 service 发布的接口一致
+4. 查看 service 模块日志确认是否注册成功
+
+</details>
+
+<details>
+<summary><b>图片上传失败</b></summary>
+
+**原因**：FastDFS 未启动或 `client.conf` 配置错误
+
+1. 确认 FastDFS tracker/storage 已启动
+2. 确认 `resource/client.conf` 中 tracker 地址正确
+3. 邮件告警需配置 `mail.from`、`mail.authCode`、`mail.to` 系统属性或环境变量
+
+</details>
+
 ---
 
-## 9. 界面预览
+## 10. 界面预览
 
 | 页面 | 截图 |
 |------|------|
@@ -298,11 +413,11 @@ mysql -u root -p taotao
 
 ---
 
-## 10. 贡献
+## 11. 贡献
 
 欢迎提交 Issue 和 Pull Request！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-## 11. 许可证
+## 12. 许可证
 
 本项目基于 **Apache License 2.0** 开源，详见 [LICENSE](LICENSE)。
 

@@ -40,7 +40,7 @@ taotao-search/
 cd taotao-search/taotao-search-service
 mvn tomcat7:run
 
-# 默认端口：8084
+# Dubbo服务端口：20882
 ```
 
 ### 依赖关系

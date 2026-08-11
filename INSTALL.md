@@ -1,4 +1,6 @@
-# 淘淘商城安装指南
+# 淘淘商城安装与运维指南
+
+本文档涵盖淘淘商城的完整安装、部署与日常运维操作。
 
 ## 环境要求
 
@@ -14,12 +16,14 @@
 | FastDFS | 5.0+ | 文件存储（可选） |
 | Tomcat | 7.0+ | Web服务器 |
 
+> 外部中间件（Redis/ZooKeeper/Solr/ActiveMQ/FastDFS）可通过 Docker 快速部署，见 [Docker配置.md](Docker配置.md)。
+
 ## 安装步骤
 
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/itxinfei/taotao-parent.git
+git clone https://gitee.com/itxinfei/taotao-parent.git
 cd taotao-parent
 ```
 
@@ -28,7 +32,7 @@ cd taotao-parent
 #### 2.1 JDK安装
 
 - **Windows**: 下载 JDK 1.8 安装包并安装
-- **Linux**: 
+- **Linux**:
 ```bash
 # Ubuntu/Debian
 sudo apt-get install openjdk-8-jdk
@@ -98,8 +102,6 @@ jdbc.password=your_password
 
 ### 5. 配置外部服务（可选）
 
-如果需要使用以下外部服务，请修改相应配置文件：
-
 #### 5.1 Redis配置
 
 修改各 service 模块下的 `spring/applicationContext-jedis.xml`:
@@ -132,6 +134,41 @@ jdbc.password=your_password
 </bean>
 ```
 
+#### 5.4 ActiveMQ配置
+
+修改 `taotao-manager-service` 与 `taotao-search-service` 下的 `spring/applicationContext-activemq.xml`:
+
+```xml
+<!-- 将地址修改为你的ActiveMQ地址 -->
+<bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="tcp://localhost:61616"/>
+</bean>
+```
+
+#### 5.5 FastDFS配置
+
+修改 `taotao-manager-web/src/main/resources/resource/client.conf` 中的 tracker 地址：
+
+```properties
+tracker_server=localhost:22122
+```
+
+#### 5.6 邮件告警配置（可选）
+
+搜索系统在发生异常时会发送告警邮件，通过系统属性或环境变量配置（避免硬编码凭据）：
+
+```bash
+# 方式一：系统属性（JVM启动参数）
+-Dmail.from=your_account@163.com -Dmail.authCode=your_auth_code -Dmail.to=admin@example.com
+
+# 方式二：环境变量
+export MAIL_FROM=your_account@163.com
+export MAIL_AUTH_CODE=your_auth_code
+export MAIL_TO=admin@example.com
+```
+
+未配置时，邮件功能自动跳过并记录警告日志，不影响系统运行。
+
 ### 6. Maven编译
 
 ```bash
@@ -143,6 +180,9 @@ mvn install -N
 
 # 编译所有模块（跳过测试）
 mvn clean install -DskipTests
+
+# 仅编译验证（不打包、速度快）
+mvn compile test-compile
 ```
 
 ## 运行方式
@@ -152,20 +192,32 @@ mvn clean install -DskipTests
 ```bash
 # 打开多个终端窗口，按顺序启动
 
-# 终端1：启动后台管理服务
+# 终端1：启动后台管理服务（Dubbo 20880）
 cd taotao-manager/taotao-manager-service
 mvn tomcat7:run
 
-# 终端2：启动后台管理Web
+# 终端2：启动内容服务（Dubbo 20881）
+cd taotao-content/taotao-content-service
+mvn tomcat7:run
+
+# 终端3：启动搜索服务（Dubbo 20882）
+cd taotao-search/taotao-search-service
+mvn tomcat7:run
+
+# 终端4：启动SSO服务（Dubbo 20883）
+cd taotao-sso/taotao-sso-service
+mvn tomcat7:run
+
+# 终端5：启动订单服务（Dubbo 20884）
+cd taotao-order/taotao-order-service
+mvn tomcat7:run
+
+# 终端6：后台管理Web（8081）
 cd taotao-manager-web
 mvn tomcat7:run
 
-# 终端3：启动门户网站
+# 终端7：门户网站（8082）
 cd taotao-portal-web
-mvn tomcat7:run
-
-# 终端4：启动内容服务（如需）
-cd taotao-content/taotao-content-service
 mvn tomcat7:run
 ```
 
@@ -182,15 +234,24 @@ cd /path/to/tomcat/bin
 startup.bat   # Windows
 ```
 
-## 服务端口说明
+## 端口说明
+
+> `service` 模块通过 Dubbo 协议对外提供 RPC 服务，`web` 模块通过 HTTP 对外提供服务。
+
+### Dubbo 端口（RPC）
+
+| 模块 | Dubbo端口 | 配置位置 |
+|------|-----------|----------|
+| taotao-manager-service | 20880 | applicationContext-service.xml |
+| taotao-content-service | 20881 | applicationContext-service.xml |
+| taotao-search-service | 20882 | applicationContext-service.xml |
+| taotao-sso-service | 20883 | applicationContext-service.xml |
+| taotao-order-service | 20884 | applicationContext-service.xml |
+
+### HTTP 端口（Tomcat）
 
 | 模块 | 默认端口 | 配置位置 |
 |------|----------|----------|
-| taotao-manager-service | 8083 | pom.xml |
-| taotao-content-service | 8080 | pom.xml |
-| taotao-search-service | 8084 | pom.xml |
-| taotao-sso-service | 8087 | pom.xml |
-| taotao-order-service | 8090 | pom.xml |
 | taotao-manager-web | 8081 | pom.xml |
 | taotao-portal-web | 8082 | pom.xml |
 | taotao-search-web | 8085 | pom.xml |
@@ -198,6 +259,17 @@ startup.bat   # Windows
 | taotao-sso-web | 8088 | pom.xml |
 | taotao-cart-web | 8089 | pom.xml |
 | taotao-order-web | 8091 | pom.xml |
+
+### 中间件端口
+
+| 服务 | 默认端口 |
+|------|----------|
+| MySQL | 3306 |
+| Redis | 6379 |
+| ZooKeeper | 2181 |
+| Solr | 8983 |
+| ActiveMQ | 61616（管理台 8161） |
+| FastDFS tracker | 22122 |
 
 ## 访问地址
 
@@ -209,6 +281,61 @@ startup.bat   # Windows
 | 商品详情 | http://localhost:8086 |
 | SSO登录 | http://localhost:8088 |
 | 购物车 | http://localhost:8089 |
+| 订单中心 | http://localhost:8091 |
+
+## 运维指南
+
+### 日志
+
+各模块日志由 log4j 输出到 `${catalina.home}/logs/`：
+
+| 日志文件 | 级别 | 内容 |
+|----------|------|------|
+| `taotao-xxx.log` | INFO | 常规业务日志（按天滚动） |
+| `taotao-xxx-error.log` | ERROR | 错误日志（独立文件，便于排查） |
+
+```bash
+# 实时查看日志
+tail -f ${catalina.home}/logs/taotao-manager-web.log
+
+# 查看错误日志
+grep ERROR ${catalina.home}/logs/taotao-manager-web-error.log
+```
+
+### 服务健康检查
+
+```bash
+# 1. 检查各端口是否监听
+netstat -tlnp | grep -E "8081|20880|2181|6379|8983|61616"
+
+# 2. 检查 Dubbo 服务注册（ZooKeeper）
+zkCli.sh -server localhost:2181
+ls /dubbo/com.taotao.service.ItemService/providers
+
+# 3. 检查 Solr 索引
+curl "http://localhost:8983/solr/collection1/select?q=*:*&rows=1"
+
+# 4. 检查 Redis 缓存
+redis-cli -h localhost ping
+redis-cli -h localhost keys "ITEM_INFO*"
+```
+
+### 数据备份
+
+```bash
+# MySQL 全量备份
+mysqldump -u root -p taotao > taotao_backup_$(date +%Y%m%d).sql
+
+# Redis 持久化文件（rdb/aof）定期备份
+cp /var/lib/redis/dump.rdb /backup/redis/
+```
+
+### 常见性能优化
+
+- MySQL：开启慢查询日志，为 `tb_item`、`tb_order` 等大表建立索引
+- Redis：合理设置缓存过期时间（商品缓存 `ITEM_EXPIRE` 默认 86400 秒）
+- Solr：定期执行 optimize 合并索引段
+- JVM：生产环境建议 `-Xms1g -Xmx1g -XX:+UseConcMarkSweepGC`
 
 ## 常见问题排查
 
@@ -270,6 +397,7 @@ mysql -h localhost -u root -p -P 3306 taotao
 1. ZooKeeper服务是否启动
 2. ZooKeeper地址配置是否正确
 3. 网络是否可达
+4. 各 service 模块 Dubbo 端口（20880-20884）是否冲突
 
 ```bash
 # 测试ZooKeeper连接
@@ -288,6 +416,15 @@ echo stat | nc localhost 2181
 mkdir -p /usr/local/tomcat/logs
 chown -R tomcat:tomcat /usr/local/tomcat/logs
 ```
+
+### 问题6：web 模块提示 No provider available
+
+**现象**：后台管理或门户无法调用服务
+
+**解决方案**：
+1. 确认 5 个 service 模块已启动（Dubbo 20880-20884）
+2. 确认 web 模块 `dubbo:reference` 的接口与 service 发布的接口一致
+3. 查看 web 模块错误日志确认具体报错
 
 ## Docker部署（可选）
 
@@ -329,6 +466,6 @@ taotao-parent
 ## 技术支持
 
 如遇问题，可通过以下方式获取帮助：
-- QQ群：863662849
+- QQ群：661543188
 - 邮箱：747011882@qq.com
 - 提交Issue：在项目仓库提交Issue

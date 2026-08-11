@@ -38,7 +38,7 @@ taotao-content/
 cd taotao-content/taotao-content-service
 mvn tomcat7:run
 
-# 默认端口：8080
+# Dubbo服务端口：20881
 ```
 
 ### 依赖关系
