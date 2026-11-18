@@ -1,3 +1,5 @@
+> ⚠️ 本仓库为个人学习归档，代码著作权归原作者／原课程机构所有。本仓库不授予任何许可，请勿用于商业用途。
+
 <p align="center">
   <img src="docs/logo.png" alt="淘淘商城" width="180"/>
 </p>
@@ -450,7 +452,7 @@ mysql -u root -p taotao
 
 ## 📄 许可证
 
-本项目基于 **Apache License 2.0** 开源，详见 [LICENSE](LICENSE)。
+本项目代码著作权归原作者／原课程机构所有，本仓库仅作学习归档，不授予任何许可。
 
 ---
 
